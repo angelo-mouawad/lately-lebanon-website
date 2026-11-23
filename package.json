@@ -3,14 +3,18 @@
   "private": true,
   "workspaces": [
     "shared",
-    "api"
+    "api",
+    "web"
   ],
   "scripts": {
     "dev:api": "npm run dev -w api",
+    "dev:web": "npm run dev -w web",
     "build:api": "npm run build -w api",
+    "build:web": "npm run build -w web",
     "start:api": "npm run start -w api",
+    "start:web": "npm run start -w web",
     "test": "npm run test -w shared && npm run test -w api",
-    "typecheck": "npm run typecheck -w shared && npm run typecheck -w api"
+    "typecheck": "npm run typecheck -w shared && npm run typecheck -w api && npm run typecheck -w web"
   },
   "engines": {
     "node": ">=20.11"

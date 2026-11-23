@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/*
+ * Lately Lebanon design tokens.
+ * Warm sand paper, ink text, terracotta used sparingly, olive as a quiet second colour.
+ * Sharp corners everywhere and hairline borders instead of shadows.
+ */
+@theme {
+  --color-sand: #f4efe6;
+  --color-sand-deep: #ebe3d5;
+  --color-paper: #fbf8f2;
+  --color-ink: #1b1815;
+  --color-ink-soft: #3d3832;
+  --color-muted: #6b635a;
+  --color-line: #d8cfc0;
+  --color-line-strong: #b9ad9a;
+  --color-terracotta: #a8492a;
+  --color-terracotta-dark: #8a3a20;
+  --color-olive: #5b6339;
+  --color-olive-soft: #e4e4d2;
+  --color-danger: #9f2d20;
+  --color-danger-soft: #f6e1dc;
+  --color-success: #4b6332;
+  --color-success-soft: #e3e8d6;
+  --color-warning-soft: #f3e6c8;
+
+  --font-serif: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(2.75rem, 7vw, 6rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.02em;
+
+  --ease-out-quick: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --animate-fade-in: fade-in 300ms var(--ease-out-quick) both;
+  --animate-slide-in-right: slide-in-right 280ms var(--ease-out-quick) both;
+  --animate-slide-in-left: slide-in-left 280ms var(--ease-out-quick) both;
+
+  @keyframes loading-bar {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(300%); }
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes slide-in-left {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-radius: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-terracotta);
+    color: var(--color-paper);
+  }
+
+  [dir="rtl"] .flip-rtl {
+    transform: scaleX(-1);
+  }
+}
+
+@layer components {
+  /* Small uppercase label with wide tracking, used for kickers and table headers. */
+  .label {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Underline that grows on hover, for text links. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 220ms var(--ease-out-quick);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .prose-ll p + p {
+    margin-top: 1em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}
