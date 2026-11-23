@@ -62,6 +62,24 @@ export function clearCart() {
 
 export const cartCount = (lines: CartLine[]) => lines.reduce((n, l) => n + l.quantity, 0);
 
+/* ---------- Promo code and last order ---------- */
+
+export const promoStore = createLocalStore<string>("ll_promo", "", (v) => (typeof v === "string" ? v.slice(0, 40) : ""));
+export const usePromo = promoStore.useStore;
+
+export interface LastOrder {
+  number: string;
+  phone: string;
+  hasEmail: boolean;
+}
+
+/** The order just placed, so the confirmation page can show its details. */
+export const lastOrderStore = createLocalStore<LastOrder | null>("ll_last_order", null, (v) => {
+  if (!v || typeof v !== "object") return null;
+  const o = v as Record<string, unknown>;
+  return typeof o.number === "string" && typeof o.phone === "string" ? { number: o.number, phone: o.phone, hasEmail: Boolean(o.hasEmail) } : null;
+});
+
 /* ---------- Saved for later and recently viewed ---------- */
 
 function isCard(v: unknown): v is PublicProductCard {

@@ -43,14 +43,15 @@ export function SectionHeading({
 export function ProductGrid({
   products,
   priorityCount = 0,
-  className,
+  columns = 4,
 }: {
   products: PublicProductCard[];
   priorityCount?: number;
-  className?: string;
+  /** Columns on large screens: 3 next to a sidebar, 4 full width. */
+  columns?: 3 | 4;
 }) {
   return (
-    <ul className={cn("grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-4", className)}>
+    <ul className={cn("grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6", columns === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4")}>
       {products.map((p, i) => (
         <li key={p.id}>
           <ProductCard product={p} priority={i < priorityCount} action={<WishlistButton product={p} />} />
