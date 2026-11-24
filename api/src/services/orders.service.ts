@@ -16,6 +16,7 @@ import { AppError, badRequest, conflict, notFound } from "../lib/errors";
 import { logger } from "../lib/logger";
 import { prisma, type Tx } from "../lib/prisma";
 import { maybeImageSet } from "../storage/images";
+import { confirmOnlinePayment } from "./payments.service";
 import { refreshWebsite } from "./revalidate";
 import { orderRowSelect, paginate, toOrderRow } from "./serializers";
 import { releaseStock } from "./stock";
@@ -212,13 +213,16 @@ export async function expireUnpaidOrders(now = new Date()): Promise<number> {
       status: "NEW",
       createdAt: { lt: cutoff },
     },
-    select: { id: true },
+    select: { id: true, number: true },
     take: 200,
   });
 
   let cancelled = 0;
-  for (const { id } of stale) {
+  for (const { id, number } of stale) {
     try {
+      // The customer may have paid and the provider's callback got lost: ask before cancelling.
+      const outcome = await confirmOnlinePayment(number);
+      if (outcome !== "pending") continue;
       await prisma.$transaction(async (tx) => {
         const { count } = await tx.order.updateMany({
           where: { id, status: "NEW", paymentStatus: { not: "PAID" } },

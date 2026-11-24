@@ -8,6 +8,7 @@ import { prisma } from "../lib/prisma";
 import { errorHandler, notFoundHandler } from "./middleware/errors";
 import { adminRouter } from "./routes/admin";
 import { cronRouter } from "./routes/cron";
+import { paymentsRouter } from "./routes/payments";
 import { publicRouter } from "./routes/public";
 
 export function createApp() {
@@ -57,6 +58,7 @@ export function createApp() {
   app.use("/public", publicRouter);
   app.use("/admin", adminRouter);
   app.use("/cron", cronRouter);
+  app.use("/payments", paymentsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

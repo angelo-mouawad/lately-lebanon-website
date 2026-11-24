@@ -221,6 +221,43 @@ The first one cancels card and Whish orders that weren't paid within 30 minutes 
 - You can log in at `https://latelylebanon.com/admin`
 - Saving a product in the admin shows the change on the website within a few seconds
 
+### Payments
+
+Cash on delivery is always on. Card and Whish each have a switch in the API's env vars, and checkout only shows the methods that are switched on and fully configured.
+
+**How an online payment works**
+
+1. At checkout the order is created as "Waiting for payment" and its stock is held.
+2. The customer is sent to the bank's or Whish's own page to pay. Card details never reach our servers.
+3. When they come back, or when the provider calls our webhook, the API asks the provider directly whether the order was paid, for the right amount and in USD. Only that server to server answer marks an order as paid. The redirect and the webhook body are never trusted on their own.
+4. A failed payment cancels the order and releases the stock straight away. An order that's still unpaid after 30 minutes is checked once more with the provider, then cancelled by the cron job.
+5. The customer and our team get the order emails once payment is confirmed.
+
+**Visa and Mastercard (Areeba or another bank on MPGS)**
+
+| Variable | Value |
+| --- | --- |
+| `PAYMENT_CARD_ENABLED` | `true` |
+| `MPGS_GATEWAY_URL` | the gateway address the bank gives you |
+| `MPGS_MERCHANT_ID` / `MPGS_API_PASSWORD` | from the bank's merchant portal |
+| `MPGS_API_VERSION` | the API version the bank supports |
+| `MPGS_WEBHOOK_SECRET` | the notification secret from the merchant portal |
+
+In the merchant portal, set the webhook URL to `https://api.latelylebanon.com/payments/card/webhook`. Customers return to `https://api.latelylebanon.com/payments/card/return`.
+
+**Whish**
+
+| Variable | Value |
+| --- | --- |
+| `PAYMENT_WHISH_ENABLED` | `true` |
+| `WHISH_API_URL` | the API address Whish gives you (sandbox first) |
+| `WHISH_CHANNEL` / `WHISH_SECRET` | your merchant credentials |
+| `WHISH_WEBSITE_URL` | `latelylebanon.com` |
+
+Whish calls `https://api.latelylebanon.com/payments/whish/callback` and sends customers back through `/payments/whish/return`.
+
+Both integrations follow each provider's standard merchant API, and the code that reads their answers is covered by tests. Before going live, confirm the exact endpoints and field names with the bank and with Whish, and place a few test payments in their sandbox. The code to adjust is in `api/src/payments/card.ts` and `api/src/payments/whish.ts`.
+
 ### Backups and restoring
 
 Hostinger takes daily backups automatically, and you can make one on demand in hPanel under **Files > Backups**. To restore:
