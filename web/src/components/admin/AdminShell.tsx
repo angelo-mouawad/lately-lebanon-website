@@ -16,11 +16,29 @@ interface NavItem {
 
 const NAV: { heading: string; items: NavItem[] }[] = [
   {
+    heading: "Daily",
+    items: [
+      { href: "/admin", label: "Dashboard" },
+      { href: "/admin/orders", label: "Orders" },
+    ],
+  },
+  {
     heading: "Shop",
     items: [
       { href: "/admin/products", label: "Products" },
       { href: "/admin/brands", label: "Brands" },
       { href: "/admin/categories", label: "Categories" },
+    ],
+  },
+  {
+    heading: "Money and settings",
+    items: [
+      { href: "/admin/balances", label: "Brand balances", ownerOnly: true },
+      { href: "/admin/promo-codes", label: "Promo codes", ownerOnly: true },
+      { href: "/admin/delivery-zones", label: "Delivery areas", ownerOnly: true },
+      { href: "/admin/settings", label: "Homepage and shop", ownerOnly: true },
+      { href: "/admin/users", label: "Team", ownerOnly: true },
+      { href: "/admin/account", label: "My password" },
     ],
   },
 ];
