@@ -38,9 +38,10 @@ export function ProductCard({
               fill
               sizes={sizes}
               priority={priority}
+              fetchPriority={priority ? "high" : undefined}
               className={cn(
                 "object-cover transition-opacity duration-500",
-                product.hoverImage && !preview && "group-hover:opacity-0",
+                product.hoverImage && !preview && "md:group-hover:opacity-0",
               )}
             />
             {product.hoverImage && !preview && (
@@ -49,7 +50,7 @@ export function ProductCard({
                 alt=""
                 fill
                 sizes={sizes}
-                className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                className="hidden object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 md:block"
               />
             )}
           </>

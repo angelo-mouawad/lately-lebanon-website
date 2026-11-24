@@ -35,6 +35,7 @@ export function ProductGallery({ images, name }: { images: ImageSet[]; name: str
             alt={current.alt || name}
             fill
             priority={index === 0}
+            fetchPriority={index === 0 ? "high" : undefined}
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="animate-fade-in object-cover"
           />

@@ -359,6 +359,22 @@ async function seedZonesAndPromo() {
 }
 
 async function seedCatalog() {
+  if (process.env.SEED_SAMPLE_CATALOG === "false") {
+    console.log("SEED_SAMPLE_CATALOG=false, skipping the sample catalog");
+    await prisma.settings.upsert({
+      where: { id: 1 },
+      update: {},
+      create: {
+        whatsappNumber: "+96170000000",
+        contactEmail: "hello@latelylebanon.com",
+        heroHeading: "Made in Lebanon, by people you can name.",
+        heroText: "",
+        featuredBrandIds: [],
+        featuredProductIds: [],
+      },
+    });
+    return;
+  }
   if ((await prisma.brand.count()) > 0) {
     console.log("Brands already exist, skipping the sample catalog");
     return;

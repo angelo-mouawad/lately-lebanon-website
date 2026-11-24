@@ -29,7 +29,7 @@ export default async function BrandPage({ params }: { params: Params }) {
   return (
     <>
       <div className="relative aspect-[16/9] max-h-[70vh] w-full border-b border-ink bg-sand-deep sm:aspect-[21/9]">
-        {brand.cover && <Image src={brand.cover.lg} alt="" fill priority sizes="100vw" className="object-cover" />}
+        {brand.cover && <Image src={brand.cover.lg} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />}
       </div>
       <Container className="pt-10 lg:pt-14">
         <header className="grid gap-8 lg:grid-cols-12">

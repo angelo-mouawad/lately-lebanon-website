@@ -4,6 +4,7 @@ import { apiGet } from "@/lib/api";
 import { CartDrawer } from "@/components/store/CartDrawer";
 import { Footer } from "@/components/store/Footer";
 import { Header } from "@/components/store/Header";
+import { JsonLd, organizationLd } from "@/components/store/JsonLd";
 import { WhatsAppButton } from "@/components/store/WhatsAppButton";
 
 const t = getMessages();
@@ -27,6 +28,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       <Footer settings={settings} categories={categories} />
       <CartDrawer />
       <WhatsAppButton number={settings.whatsappNumber} />
+      <JsonLd data={organizationLd(settings)} />
     </>
   );
 }

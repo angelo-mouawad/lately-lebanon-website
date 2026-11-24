@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
+import { preconnect } from "react-dom";
 import { defaultLocale, dirFor } from "@/i18n/config";
 import { getMessages } from "@/i18n";
-import { SITE_URL } from "@/lib/config";
+import { API_URL, SITE_URL } from "@/lib/config";
 import "./globals.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
-  axes: ["SOFT", "opsz"],
+  axes: ["opsz"],
   display: "swap",
 });
 
@@ -36,6 +37,8 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Product photos are served from the API host, so open that connection early.
+  preconnect(API_URL);
   return (
     <html lang={defaultLocale} dir={dirFor(defaultLocale)} className={`${fraunces.variable} ${geist.variable}`}>
       <body className="min-h-dvh">{children}</body>

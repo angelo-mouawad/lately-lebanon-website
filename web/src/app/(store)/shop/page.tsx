@@ -76,7 +76,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               <p className="mt-2 text-[15px] text-muted">{t.shop.emptyHint}</p>
             </div>
           ) : (
-            <ProductGrid products={result.items} priorityCount={3} columns={3} />
+            <ProductGrid products={result.items} priorityCount={2} columns={3} />
           )}
           <ShopPagination page={result.page} pageCount={result.pageCount} basePath="/shop" params={params} />
         </div>

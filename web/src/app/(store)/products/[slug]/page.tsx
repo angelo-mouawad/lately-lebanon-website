@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { PublicProduct, PublicProductCard, StoreSettings } from "@latelylebanon/shared";
 import { fmt, getMessages } from "@/i18n";
 import { apiGet } from "@/lib/api";
+import { JsonLd, productLd } from "@/components/store/JsonLd";
 import { ProductGallery } from "@/components/store/ProductGallery";
 import { ProductPurchase } from "@/components/store/ProductPurchase";
 import { RecentlyViewed } from "@/components/store/RecentlyViewed";
@@ -122,6 +123,7 @@ export default async function ProductPage({ params }: { params: Params }) {
       )}
 
       <RecentlyViewed current={card} />
+      <JsonLd data={productLd(product)} />
     </Container>
   );
 }
