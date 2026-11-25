@@ -122,7 +122,7 @@ The plan is shared hosting with managed Node.js apps. The setup below uses two N
    mysql://USER:PASSWORD@HOST:3306/DATABASE?connection_limit=5
    ```
 
-   Hostinger shows the host on the database page (often `localhost` from inside the hosting account).
+   Use `127.0.0.1` as the host. The database only accepts connections from inside the hosting account, so the external host name shown on the database page (`srvXXXX.hstgr.io`) is refused. Use a password with letters and numbers only, or URL-encode any symbols (`@` becomes `%40`).
 
 ### 3. The API app
 
@@ -131,11 +131,12 @@ Create a Node.js app connected to the GitHub repo with these settings:
 | Setting | Value |
 | --- | --- |
 | Node version | 22 |
-| Install command | `npm ci --include=dev` |
+| Framework preset | Other |
+| Root directory | `./` |
 | Build command | `npm run build:api` |
-| Start command | `npm run start:api` |
+| Entry file | `api/dist/server.js` |
 
-`--include=dev` matters: the build needs Prisma, TypeScript and tsup even if `NODE_ENV=production` is set.
+Add `NPM_CONFIG_INCLUDE=dev` to the environment variables: the build needs Prisma, TypeScript and tsup, which npm would otherwise skip once `NODE_ENV=production` is set.
 
 Environment variables (see `api/.env.example` for every option):
 
@@ -189,9 +190,10 @@ Create a second Node.js app from the same repo:
 | Setting | Value |
 | --- | --- |
 | Node version | 22 |
-| Install command | `npm ci --include=dev` |
-| Build command | `npm run build:web` |
-| Start command | `npm run start:web` |
+| Framework preset | Other (the Next.js preset expects a single-app repo) |
+| Root directory | `./` |
+| Build command | `npm run build` (the root `build` script builds the storefront) |
+| Entry file | `web/server.mjs` |
 
 Environment variables:
 
@@ -200,6 +202,8 @@ Environment variables:
 | `NEXT_PUBLIC_SITE_URL` | `https://latelylebanon.com` |
 | `NEXT_PUBLIC_API_URL` | `https://api.latelylebanon.com` |
 | `REVALIDATE_SECRET` | the same value as in the API |
+| `NODE_ENV` | `production` |
+| `NPM_CONFIG_INCLUDE` | `dev` |
 
 `NEXT_PUBLIC_*` values are baked in at build time: redeploy the web app after changing them. The web build doesn't need the API to be running. Pages render on request and are cached.
 
