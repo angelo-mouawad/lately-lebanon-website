@@ -11,7 +11,7 @@ export async function deleteUnusedImages(keys: (string | null | undefined)[]): P
       prisma.productImage.count({ where: { key } }),
       prisma.brand.count({ where: { OR: [{ logoKey: key }, { coverKey: key }] } }),
       prisma.category.count({ where: { imageKey: key } }),
-      prisma.settings.count({ where: { heroImageKey: key } }),
+      prisma.settings.count({ where: { OR: [{ heroImageKey: key }, { aboutImageKey: key }] } }),
     ]);
     if (images + brands + categories + settings === 0) await deleteImage(key);
   }

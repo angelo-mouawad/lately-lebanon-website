@@ -131,7 +131,7 @@ export function customerConfirmation(order: EmailOrder, ctx: EmailContext) {
     ctx,
     `<p style="margin:0 0 6px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${accent};">Order ${escape(order.number)}</p>
 <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:26px;">Thank you, ${escape(firstName)}.</h1>
-<p style="margin:0 0 12px;">We've passed your order to the makers. We'll call or message you on ${escape(formatLebanesePhone(order.phone))} to confirm delivery. ${payLine}</p>
+<p style="margin:0 0 12px;">We're preparing your order with the brands. We'll call or message you on ${escape(formatLebanesePhone(order.phone))} to confirm delivery. ${payLine}</p>
 ${itemsTable(order)}
 <p style="margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6B635A;">Delivering to</p>
 <p style="margin:0 0 20px;">${escape(order.address)}<br>${escape(order.city)}, ${escape(order.region)}</p>
@@ -142,7 +142,7 @@ ${itemsTable(order)}
   const text = `Thank you, ${firstName}.
 
 Order ${order.number}
-We've passed your order to the makers. We'll call or message you on ${formatLebanesePhone(order.phone)} to confirm delivery. ${payLine}
+We're preparing your order with the brands. We'll call or message you on ${formatLebanesePhone(order.phone)} to confirm delivery. ${payLine}
 
 ${itemsText(order)}
 

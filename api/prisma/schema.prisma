@@ -386,6 +386,7 @@ model Settings {
   heroHeading                String   @db.VarChar(120)
   heroText                   String   @db.VarChar(400)
   heroImageKey               String?  @db.VarChar(255)
+  aboutImageKey              String?  @db.VarChar(255)
   /// number[]
   featuredBrandIds           Json
   /// number[]

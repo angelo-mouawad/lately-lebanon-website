@@ -17,29 +17,28 @@ export interface InfoPage {
 export const pagesEn = {
   about: {
     title: "About Lately Lebanon",
-    description: "Why we started a shop for small Lebanese makers, and how it works.",
-    intro:
-      "Lebanon has always made beautiful things in small rooms: soap in Tripoli, pots in the south, weaving in Zouk, jars of mouneh in every village kitchen. Lately Lebanon is one place to find them.",
+    description:
+      "Lately Lebanon is a curated marketplace bringing Lebanese brands, independent businesses and the people behind them together in one place.",
+    intro: "A little more local.",
     sections: [
       {
-        heading: "Why we started",
         paragraphs: [
-          "Most of the makers we work with sell through Instagram messages, word of mouth and the odd weekend market. They're brilliant at their craft and short on time for everything else: photos, delivery, answering the same question forty times.",
-          "We started Lately Lebanon to take that part off their hands, so they can keep making and more people can find them.",
+          "Lebanon is full of people with ideas, passion and something special to offer.",
+          "From emerging labels to independent businesses, there are so many local brands worth discovering. Yet finding them often means searching through pages, scrolling through social media and stumbling upon them by chance.",
+          "We thought there should be an easier way.",
         ],
       },
       {
-        heading: "How it works",
         paragraphs: [
-          "We meet every maker in person, see the workshop, and agree on what goes in the shop. We photograph the products, write the listings and look after customers.",
-          "When you order, the maker prepares your parcel and it goes out with our delivery partner, or with the maker directly. We keep a commission on each sale. The rest goes back to the person who made it.",
+          "Lately Lebanon was created to bring these discoveries together in one place: a curated marketplace celebrating Lebanese brands, independent businesses and the people behind them.",
+          "A place where customers can discover something new, find their next favourite brand and shop local with ease.",
+          "And a place where businesses can introduce their products to a wider audience, connect with new customers and become part of a community that believes in what they do.",
         ],
       },
       {
-        heading: "What we look for",
         paragraphs: [
-          "Things made in Lebanon, by hand or in small batches, by people who'd be happy to tell you how. No resellers, no imports with a new label.",
-          "If you make something you think belongs here, message us. We'd like to visit.",
+          "Because shopping local should feel exciting, effortless and full of discovery.",
+          "Discover local. Shop Lebanese.",
         ],
       },
     ],
@@ -55,7 +54,7 @@ export const pagesEn = {
       {
         heading: "How long does delivery take?",
         paragraphs: [
-          "Usually 2 to 4 working days. Some pieces are made in small batches, so if something takes longer we'll call or message you before we confirm.",
+          "Usually 2 to 4 working days. Some products are made to order, so if something takes longer we'll call or message you before we confirm.",
         ],
       },
       {
@@ -69,18 +68,20 @@ export const pagesEn = {
         paragraphs: ["No. Checkout only asks for your name, phone number and address. You can track your order with your order number and phone."],
       },
       {
-        heading: "Why do some items look a little different from the photos?",
+        heading: "Why might an item look a little different from the photos?",
         paragraphs: [
-          "Because they're handmade. Glazes run, weaves shift, a batch of soap cures a shade darker. We think that's the point, but if something arrives damaged or not as described, see our returns page.",
+          "Product photos are provided by each brand, and colours can look different from one screen to another. Some products are also handmade or made in small batches, so small variations are normal. If something arrives damaged or not as described, see our returns page.",
         ],
       },
       {
         heading: "Can I order something custom or in a larger quantity?",
-        paragraphs: ["Often, yes. Message us on WhatsApp with what you have in mind and we'll ask the maker."],
+        paragraphs: ["Often, yes. Message us on WhatsApp with what you have in mind and we'll ask the brand."],
       },
       {
-        heading: "I make things in Lebanon. Can I sell with you?",
-        paragraphs: ["We'd love to hear from you. Send us a few photos and a line about what you make on WhatsApp or by email."],
+        heading: "I run a Lebanese brand. Can I sell on Lately Lebanon?",
+        paragraphs: [
+          "We'd love to hear from you. Partner brands get another place to showcase their products, reach new customers and sell alongside other Lebanese brands. Send us a few words about your brand and a link to your page on WhatsApp or by email.",
+        ],
       },
     ],
   },
@@ -97,7 +98,7 @@ export const pagesEn = {
       {
         heading: "Changed your mind",
         paragraphs: [
-          "Unused items in their original condition can be returned within 7 days of delivery. Message us first so we can arrange pickup. The delivery cost of the return is on you, and we refund the item price once the maker receives it.",
+          "Unused items in their original condition can be returned within 7 days of delivery. Message us first so we can arrange pickup. The delivery cost of the return is on you, and we refund the item price once the brand receives it.",
         ],
       },
       {
@@ -121,7 +122,7 @@ export const pagesEn = {
       {
         heading: "Who we are",
         paragraphs: [
-          "Lately Lebanon is an online shop based in Lebanon. We sell products made by independent Lebanese makers (our brands) on their behalf. When you place an order, you're buying from us, and the brand prepares the order.",
+          "Lately Lebanon is an online shop based in Lebanon. We sell products from Lebanese brands and independent businesses (our partner brands) on their behalf. When you place an order, you're buying from us, and the brand prepares the order.",
         ],
       },
       {
@@ -133,7 +134,7 @@ export const pagesEn = {
       {
         heading: "Orders and stock",
         paragraphs: [
-          "Your order is confirmed when we call or message you, or when your online payment goes through. Most items are made in small numbers. If something sells out before we can prepare it, we'll tell you and refund anything you've paid.",
+          "Your order is confirmed when we call or message you, or when your online payment goes through. Some items are available in limited quantities. If something sells out before we can prepare it, we'll tell you and refund anything you've paid.",
           "Card and Whish orders that aren't paid within 30 minutes are cancelled automatically.",
         ],
       },
@@ -148,9 +149,9 @@ export const pagesEn = {
         paragraphs: ["Our returns page explains what can be returned and how. It forms part of these terms."],
       },
       {
-        heading: "Handmade goods",
+        heading: "Product photos and variations",
         paragraphs: [
-          "Small variations in colour, size and finish are part of handmade work and aren't defects. Product photos show a typical piece.",
+          "Product photos are supplied by our partner brands and show a typical piece. Some products are handmade or made in small batches, so small variations in colour, size and finish are normal and aren't defects.",
         ],
       },
       {
@@ -173,7 +174,7 @@ export const pagesEn = {
       {
         heading: "Why we use it",
         paragraphs: [
-          "To prepare and deliver your order, contact you about it and send you an order confirmation. We share your name, phone and address with the maker and the delivery partner only so they can get your order to you.",
+          "To prepare and deliver your order, contact you about it and send you an order confirmation. We share your name, phone and address with the brand and the delivery partner only so they can get your order to you.",
           "We don't sell your details, and we don't send marketing messages unless you've asked us to.",
         ],
       },
@@ -205,8 +206,10 @@ export const pagesEn = {
         paragraphs: ["Have your order number ready, it starts with LL. You can also check its status on the Track your order page."],
       },
       {
-        heading: "Makers",
-        paragraphs: ["If you make something in Lebanon and think it belongs here, send us a few photos and a line about your work."],
+        heading: "Partner with us",
+        paragraphs: [
+          "Run a Lebanese brand and want to reach new customers? Become a partner brand. Send us a few words about your brand and a link to your page.",
+        ],
       },
     ],
   },

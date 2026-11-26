@@ -160,6 +160,7 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
       heroHeading: s.heroHeading,
       heroText: s.heroText,
       heroImageKey: s.heroImage?.key ?? null,
+      aboutImageKey: s.aboutImage?.key ?? null,
       featuredBrandIds: s.featuredBrandIds,
       featuredProductIds: s.featuredProductIds,
     };
@@ -208,13 +209,20 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
         </div>
       </Section>
 
-      <Section title="Featured makers" description="Shown on the home page, in this order. Leave empty to show the first four brands.">
+      <Section title="About page" description="The photo under the About Lately Lebanon title.">
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium">Photo</span>
+          <SingleImageUpload value={s.aboutImage} onChange={(v) => set("aboutImage", v)} kind="hero" aspect="aspect-4/5" hint="A portrait photo works best, at least 1200 px tall." />
+        </div>
+      </Section>
+
+      <Section title="Featured brands" description="Shown on the home page, in this order. Leave empty to show the first four brands.">
         <OrderedPicker
           selected={s.featuredBrandIds}
           options={brandOptions}
           onChange={(ids) => set("featuredBrandIds", ids)}
           max={12}
-          emptyText="No makers picked."
+          emptyText="No brands picked."
         />
       </Section>
 

@@ -40,7 +40,7 @@ export default async function BrandPage({ params }: { params: Params }) {
               </div>
             )}
             <div className="flex flex-col gap-3">
-              <p className="label text-terracotta">{t.product.madeBy}</p>
+              <p className="label text-terracotta">{t.brands.kicker}</p>
               <h1 className="font-serif text-5xl leading-none sm:text-6xl">{brand.name}</h1>
               {brand.instagramUrl && (
                 <a

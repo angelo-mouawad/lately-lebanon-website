@@ -336,6 +336,7 @@ export const settingsSchema = z.object({
   heroHeading: text(120),
   heroText: z.string().trim().max(400).default(""),
   heroImageKey: imageKey.nullish(),
+  aboutImageKey: imageKey.nullish(),
   featuredBrandIds: z.array(z.number().int().positive()).max(12),
   featuredProductIds: z.array(z.number().int().positive()).max(24),
 });

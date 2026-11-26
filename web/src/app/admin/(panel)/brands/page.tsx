@@ -15,7 +15,7 @@ export default function BrandsPage() {
     <>
       <PageHeader
         title="Brands"
-        description="The makers we sell for. Each brand has a page on the website with its story and products."
+        description="Our partner brands. Each brand has a page on the website with its story and products."
         actions={<ButtonLink href="/admin/brands/new">Add a brand</ButtonLink>}
       />
       {error && <ErrorBlock message={error} onRetry={reload} />}

@@ -102,6 +102,8 @@ export interface StoreSettings {
   heroHeading: string;
   heroText: string;
   heroImage: ImageSet | null;
+  /** Photo on the About page, under the title. */
+  aboutImage: ImageSet | null;
 }
 
 export interface HomeData {
@@ -386,6 +388,7 @@ export interface AdminSettings {
   heroHeading: string;
   heroText: string;
   heroImage: ImageSet | null;
+  aboutImage: ImageSet | null;
   featuredBrandIds: number[];
   featuredProductIds: number[];
 }

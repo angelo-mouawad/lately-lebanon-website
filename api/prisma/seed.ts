@@ -367,7 +367,7 @@ async function seedCatalog() {
       create: {
         whatsappNumber: "+96170000000",
         contactEmail: "info@latelylebanon.com",
-        heroHeading: "Made in Lebanon, by people you can name.",
+        heroHeading: "Lebanese brands, all in one place.",
         heroText: "",
         featuredBrandIds: [],
         featuredProductIds: [],
@@ -475,9 +475,9 @@ async function seedCatalog() {
       freeDeliveryThresholdCents: 7500,
       announcementText: "Free delivery anywhere in Lebanon on orders over $75",
       announcementActive: true,
-      heroHeading: "Made in Lebanon, by people you can name.",
+      heroHeading: "Lebanese brands, all in one place.",
       heroText:
-        "Soap from Tripoli, clay from the south, linen from Zouk and the summer pantry from the Chouf. We find the makers, you get the real thing at your door.",
+        "Lately Lebanon brings together a curated selection of Lebanese brands and small businesses, making it easier to discover and shop local.",
       heroImageKey: hero.key,
       featuredBrandIds: [...brandIds.values()],
       featuredProductIds: featured.slice(0, 8),

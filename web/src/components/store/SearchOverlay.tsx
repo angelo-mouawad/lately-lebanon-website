@@ -99,7 +99,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             <div className="flex flex-col gap-8">
               {results.brands.length > 0 && (
                 <div>
-                  <p className="label mb-3 text-muted">{t.search.makers}</p>
+                  <p className="label mb-3 text-muted">{t.search.brands}</p>
                   <ul className="flex flex-wrap gap-2">
                     {results.brands.map((b) => (
                       <li key={b.slug}>

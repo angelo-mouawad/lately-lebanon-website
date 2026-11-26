@@ -11,7 +11,7 @@ const DEFAULTS = {
   storeName: "Lately Lebanon",
   whatsappNumber: "+96170000000",
   contactEmail: "info@latelylebanon.com",
-  heroHeading: "Made in Lebanon, lately.",
+  heroHeading: "Lebanese brands, all in one place.",
   heroText: "",
   featuredBrandIds: [],
   featuredProductIds: [],
@@ -39,6 +39,7 @@ export async function getStoreSettings(): Promise<StoreSettings> {
     heroHeading: s.heroHeading,
     heroText: s.heroText,
     heroImage: maybeImageSet(s.heroImageKey, s.heroHeading),
+    aboutImage: maybeImageSet(s.aboutImageKey, "About Lately Lebanon"),
   };
 }
 
@@ -56,6 +57,7 @@ export async function getAdminSettings(): Promise<AdminSettings> {
     heroHeading: s.heroHeading,
     heroText: s.heroText,
     heroImage: maybeImageSet(s.heroImageKey, s.heroHeading),
+    aboutImage: maybeImageSet(s.aboutImageKey, "About Lately Lebanon"),
     featuredBrandIds: asNumberArray(s.featuredBrandIds),
     featuredProductIds: asNumberArray(s.featuredProductIds),
   };
@@ -64,7 +66,9 @@ export async function getAdminSettings(): Promise<AdminSettings> {
 export async function updateSettings(data: z.output<typeof settingsSchema>): Promise<AdminSettings> {
   const previous = await loadSettings();
   await prisma.settings.update({ where: { id: 1 }, data });
-  if (previous.heroImageKey !== data.heroImageKey) await deleteUnusedImages([previous.heroImageKey]);
+  await deleteUnusedImages(
+    [previous.heroImageKey, previous.aboutImageKey].filter((k) => k !== data.heroImageKey && k !== data.aboutImageKey),
+  );
   refreshWebsite("settings", "catalog");
   return getAdminSettings();
 }

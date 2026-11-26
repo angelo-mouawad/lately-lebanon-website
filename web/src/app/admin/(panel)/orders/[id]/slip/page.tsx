@@ -97,7 +97,7 @@ export default function PackingSlipPage({ params }: { params: Promise<{ id: stri
         </section>
 
         <footer className="border-t border-ink pt-4 text-sm">
-          Thank you for buying from Lebanese makers. Questions? WhatsApp us or email info@latelylebanon.com.
+          Thank you for shopping local. Questions? WhatsApp us or email info@latelylebanon.com.
         </footer>
       </article>
     </div>

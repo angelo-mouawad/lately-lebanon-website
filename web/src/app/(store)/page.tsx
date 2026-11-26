@@ -28,7 +28,7 @@ export default async function HomePage() {
               {t.home.shopNow}
             </ButtonLink>
             <ButtonLink href="/brands" size="lg" variant="secondary">
-              {t.home.meetMakers}
+              {t.home.meetBrands}
             </ButtonLink>
           </div>
         </div>
@@ -47,7 +47,7 @@ export default async function HomePage() {
         </div>
       </Container>
 
-      {/* Makers */}
+      {/* Featured brands */}
       {home.featuredBrands.length > 0 && (
         <Container className="pb-20">
           <SectionHeading
@@ -126,18 +126,18 @@ export default async function HomePage() {
         </Container>
       )}
 
-      {/* How it works */}
+      {/* What is Lately Lebanon */}
       <section className="mb-20 border-y border-ink bg-paper">
         <Container className="grid gap-12 py-16 lg:grid-cols-12 lg:py-24">
           <div className="flex flex-col gap-6 lg:col-span-5">
-            <h2 className="font-serif text-4xl leading-tight sm:text-5xl">{t.home.howTitle}</h2>
+            <h2 className="font-serif text-4xl leading-tight sm:text-5xl">{t.home.aboutTitle}</h2>
             <div className="max-w-md border-l-2 border-terracotta pl-5">
-              <p className="label mb-2 text-terracotta">{t.home.whyLocalTitle}</p>
-              <p className="text-[17px] leading-relaxed text-ink-soft">{t.home.whyLocalText}</p>
+              <p className="label mb-2 text-terracotta">{t.home.aboutLabel}</p>
+              <p className="text-[17px] leading-relaxed text-ink-soft">{t.home.aboutText}</p>
             </div>
           </div>
           <ol className="lg:col-span-6 lg:col-start-7">
-            {t.home.howSteps.map((step, i) => (
+            {t.home.questions.map((step, i) => (
               <li key={step.title} className="grid grid-cols-[3.5rem_1fr] gap-4 border-t border-line py-6 last:border-b">
                 <span className="font-serif text-3xl text-terracotta tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <div>
