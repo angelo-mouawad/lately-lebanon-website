@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { StoreSettings, TrackedOrder } from "@latelylebanon/shared";
+import { formatLebanesePhone, whatsappNumbers, type StoreSettings, type TrackedOrder } from "@latelylebanon/shared";
 import { fmt, getMessages } from "@/i18n";
 import { publicFetch } from "@/lib/public-api";
 import { clearCart, lastOrderStore, promoStore } from "@/lib/shop-stores";
@@ -91,14 +91,19 @@ export function Confirmation() {
           <ButtonLink href="/shop">{t.confirmation.keepShopping}</ButtonLink>
         </div>
         {settings && number && (
-          <a
-            href={whatsappLink(settings.whatsappNumber, fmt(t.whatsapp.orderGreeting, { number }))}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="label link-underline py-1"
-          >
-            {t.whatsapp.button}
-          </a>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {whatsappNumbers(settings).map((n, _i, all) => (
+              <a
+                key={n}
+                href={whatsappLink(n, fmt(t.whatsapp.orderGreeting, { number }))}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label link-underline py-1"
+              >
+                {all.length > 1 ? `${t.whatsapp.button}: ${formatLebanesePhone(n)}` : t.whatsapp.button}
+              </a>
+            ))}
+          </div>
         )}
       </div>
       <div className="lg:col-span-6 lg:col-start-7">

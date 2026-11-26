@@ -30,6 +30,7 @@ export async function getStoreSettings(): Promise<StoreSettings> {
   return {
     storeName: s.storeName,
     whatsappNumber: s.whatsappNumber,
+    whatsappNumber2: s.whatsappNumber2,
     contactEmail: s.contactEmail,
     instagramUrl: s.instagramUrl,
     freeDeliveryThresholdCents: s.freeDeliveryThresholdCents,
@@ -46,6 +47,7 @@ export async function getAdminSettings(): Promise<AdminSettings> {
   return {
     storeName: s.storeName,
     whatsappNumber: s.whatsappNumber,
+    whatsappNumber2: s.whatsappNumber2,
     contactEmail: s.contactEmail,
     instagramUrl: s.instagramUrl,
     freeDeliveryThresholdCents: s.freeDeliveryThresholdCents,

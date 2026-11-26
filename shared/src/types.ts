@@ -92,6 +92,8 @@ export interface PublicProduct extends Omit<PublicProductCard, "image" | "hoverI
 export interface StoreSettings {
   storeName: string;
   whatsappNumber: string;
+  /** Optional second WhatsApp number, shown next to the first. */
+  whatsappNumber2: string | null;
   contactEmail: string;
   instagramUrl: string | null;
   freeDeliveryThresholdCents: number | null;
@@ -358,6 +360,8 @@ export interface AdminDeliveryZone {
 export interface AdminSettings {
   storeName: string;
   whatsappNumber: string;
+  /** Optional second WhatsApp number, shown next to the first. */
+  whatsappNumber2: string | null;
   contactEmail: string;
   instagramUrl: string | null;
   freeDeliveryThresholdCents: number | null;

@@ -249,6 +249,7 @@ export const en = {
   },
   whatsapp: {
     button: "Chat on WhatsApp",
+    chooseNumber: "Chat with us on WhatsApp",
     greeting: "Hi Lately Lebanon, I have a question.",
     orderGreeting: "Hi Lately Lebanon, about my order {number}:",
   },

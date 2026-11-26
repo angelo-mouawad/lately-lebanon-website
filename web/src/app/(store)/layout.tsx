@@ -1,4 +1,4 @@
-import type { PublicCategory, StoreSettings } from "@latelylebanon/shared";
+import { whatsappNumbers, type PublicCategory, type StoreSettings } from "@latelylebanon/shared";
 import { getMessages } from "@/i18n";
 import { apiGet } from "@/lib/api";
 import { CartDrawer } from "@/components/store/CartDrawer";
@@ -27,7 +27,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       <main id="main">{children}</main>
       <Footer settings={settings} categories={categories} />
       <CartDrawer />
-      <WhatsAppButton number={settings.whatsappNumber} />
+      <WhatsAppButton numbers={whatsappNumbers(settings)} />
       <JsonLd data={organizationLd(settings)} />
     </>
   );

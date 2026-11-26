@@ -151,6 +151,7 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
     const body = {
       storeName: s.storeName,
       whatsappNumber: s.whatsappNumber,
+      whatsappNumber2: s.whatsappNumber2 ?? "",
       contactEmail: s.contactEmail,
       instagramUrl: s.instagramUrl ?? "",
       freeDeliveryThresholdCents: s.freeDeliveryThresholdCents,
@@ -236,10 +237,13 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
           <Field label="WhatsApp number" hint="Used for the WhatsApp buttons on the website." error={errors.whatsappNumber}>
             <Input type="tel" value={s.whatsappNumber} onChange={(e) => set("whatsappNumber", e.target.value)} />
           </Field>
-          <Field label="Contact email" error={errors.contactEmail}>
-            <Input type="email" value={s.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} />
+          <Field label="Second WhatsApp number" optional hint="Shown next to the first one everywhere. Leave empty to use one number." error={errors.whatsappNumber2}>
+            <Input type="tel" value={s.whatsappNumber2 ?? ""} onChange={(e) => set("whatsappNumber2", e.target.value)} />
           </Field>
         </div>
+        <Field label="Contact email" error={errors.contactEmail}>
+          <Input type="email" value={s.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} />
+        </Field>
         <Field label="Instagram link" optional error={errors.instagramUrl}>
           <Input type="url" value={s.instagramUrl ?? ""} onChange={(e) => set("instagramUrl", e.target.value)} placeholder="https://instagram.com/latelylebanon" />
         </Field>

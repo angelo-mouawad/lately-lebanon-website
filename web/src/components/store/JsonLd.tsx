@@ -1,4 +1,4 @@
-import type { PublicProduct, StoreSettings } from "@latelylebanon/shared";
+import { whatsappNumbers, type PublicProduct, type StoreSettings } from "@latelylebanon/shared";
 import { SITE_URL } from "@/lib/config";
 
 /** Structured data for search engines. `<` is escaped so content can't close the script tag. */
@@ -16,12 +16,12 @@ export function organizationLd(settings: StoreSettings) {
     email: settings.contactEmail,
     areaServed: { "@type": "Country", name: "Lebanon" },
     sameAs: settings.instagramUrl ? [settings.instagramUrl] : [],
-    contactPoint: {
+    contactPoint: whatsappNumbers(settings).map((telephone) => ({
       "@type": "ContactPoint",
-      telephone: settings.whatsappNumber,
+      telephone,
       contactType: "customer service",
       availableLanguage: ["English", "Arabic", "French"],
-    },
+    })),
   };
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { formatLebanesePhone, type StoreSettings } from "@latelylebanon/shared";
+import { formatLebanesePhone, whatsappNumbers, type StoreSettings } from "@latelylebanon/shared";
 import { getMessages } from "@/i18n";
 import { pagesEn } from "@/i18n/pages.en";
 import { apiGet } from "@/lib/api";
@@ -18,25 +18,33 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await apiGet<StoreSettings>("/settings", { tags: ["settings"] });
+  const numbers = whatsappNumbers(settings);
 
   return (
     <InfoPage
       page={page}
       aside={
         <div className="flex flex-col gap-3">
-          <a
-            href={whatsappLink(settings.whatsappNumber, t.whatsapp.greeting)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-14 items-center justify-center gap-3 border border-olive bg-olive px-6 text-sm tracking-wide text-paper hover:bg-ink hover:border-ink"
-          >
-            <WhatsAppIcon className="size-5" />
-            {t.whatsapp.button}
-          </a>
+          {numbers.map((n) => (
+            <a
+              key={n}
+              href={whatsappLink(n, t.whatsapp.greeting)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center justify-center gap-3 border border-olive bg-olive px-6 text-sm tracking-wide text-paper hover:bg-ink hover:border-ink"
+            >
+              <WhatsAppIcon className="size-5" />
+              {numbers.length > 1 ? `${t.whatsapp.button}: ${formatLebanesePhone(n)}` : t.whatsapp.button}
+            </a>
+          ))}
           <dl className="mt-4 flex flex-col gap-4 text-[15px]">
             <div>
               <dt className="label text-muted">WhatsApp</dt>
-              <dd className="tabular-nums">{formatLebanesePhone(settings.whatsappNumber)}</dd>
+              {numbers.map((n) => (
+                <dd key={n} className="tabular-nums">
+                  {formatLebanesePhone(n)}
+                </dd>
+              ))}
             </div>
             <div>
               <dt className="label text-muted">Email</dt>

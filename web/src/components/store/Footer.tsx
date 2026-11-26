@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatLebanesePhone, type PublicCategory, type StoreSettings } from "@latelylebanon/shared";
+import { formatLebanesePhone, whatsappNumbers, type PublicCategory, type StoreSettings } from "@latelylebanon/shared";
 import { getMessages } from "@/i18n";
 import { whatsappLink } from "@/lib/whatsapp";
 
@@ -49,9 +49,17 @@ export function Footer({ settings, categories }: { settings: StoreSettings; cate
           />
           <p className="text-[15px] leading-relaxed text-ink-soft">{t.footer.about}</p>
           <div className="flex flex-col gap-1 text-sm">
-            <a href={whatsappLink(settings.whatsappNumber, t.whatsapp.greeting)} className="link-underline self-start">
-              {t.footer.whatsapp}: {formatLebanesePhone(settings.whatsappNumber)}
-            </a>
+            <p>
+              {t.footer.whatsapp}:{" "}
+              {whatsappNumbers(settings).map((n, i) => (
+                <span key={n}>
+                  {i > 0 && " · "}
+                  <a href={whatsappLink(n, t.whatsapp.greeting)} className="link-underline tabular-nums">
+                    {formatLebanesePhone(n)}
+                  </a>
+                </span>
+              ))}
+            </p>
             <a href={`mailto:${settings.contactEmail}`} className="link-underline self-start">
               {settings.contactEmail}
             </a>

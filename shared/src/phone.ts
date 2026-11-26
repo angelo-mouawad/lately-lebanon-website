@@ -41,3 +41,10 @@ export function formatLebanesePhone(e164: string): string {
 export function whatsappDigits(e164: string): string {
   return e164.replace(/\D/g, "");
 }
+
+/** The shop's WhatsApp numbers in display order: the main one, then the optional second one. */
+export function whatsappNumbers(settings: { whatsappNumber: string; whatsappNumber2?: string | null }): string[] {
+  return settings.whatsappNumber2 && settings.whatsappNumber2 !== settings.whatsappNumber
+    ? [settings.whatsappNumber, settings.whatsappNumber2]
+    : [settings.whatsappNumber];
+}

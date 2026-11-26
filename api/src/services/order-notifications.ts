@@ -1,3 +1,4 @@
+import { whatsappNumbers } from "@latelylebanon/shared";
 import { sendMail } from "../email/mailer";
 import { adminNewOrder, customerConfirmation, type EmailOrder } from "../email/templates";
 import { env } from "../lib/env";
@@ -31,7 +32,7 @@ export async function notifyNewOrder(orderId: number): Promise<void> {
         brandName: i.brand.name,
       })),
     };
-    const ctx = { storeName: settings.storeName, webOrigin: env.WEB_ORIGIN, whatsappNumber: settings.whatsappNumber };
+    const ctx = { storeName: settings.storeName, webOrigin: env.WEB_ORIGIN, whatsappNumbers: whatsappNumbers(settings) };
 
     const sends: Promise<boolean>[] = [];
     if (order.email) {

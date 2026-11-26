@@ -63,6 +63,12 @@ export const lebanesePhone = z
     return normalized;
   });
 
+/** An optional Lebanese number: empty becomes null, anything else must be valid. */
+const optionalLebanesePhone = z
+  .union([z.literal(""), lebanesePhone])
+  .nullish()
+  .transform((v) => (v ? v : null));
+
 const cents = (message = "Please enter a price") =>
   z
     .number({ error: message })
@@ -303,6 +309,7 @@ export const deliveryZoneSchema = z.object({
 export const settingsSchema = z.object({
   storeName: text(80),
   whatsappNumber: lebanesePhone,
+  whatsappNumber2: optionalLebanesePhone,
   contactEmail: z.email("Please enter a valid email address"),
   instagramUrl: optionalUrl,
   freeDeliveryThresholdCents: cents().nullish(),

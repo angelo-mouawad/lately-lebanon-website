@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatLebanesePhone, normalizeLebanesePhone } from "./phone";
+import { formatLebanesePhone, normalizeLebanesePhone, whatsappNumbers } from "./phone";
+import { settingsSchema } from "./schemas";
 import { formatUSD, percentOf } from "./money";
 
 describe("normalizeLebanesePhone", () => {
@@ -41,5 +42,33 @@ describe("money", () => {
     expect(percentOf(1000, 20)).toBe(200);
     expect(percentOf(1999, 17.5)).toBe(350);
     expect(percentOf(333, 15)).toBe(50);
+  });
+});
+
+describe("second WhatsApp number", () => {
+  const base = {
+    storeName: "Lately Lebanon",
+    whatsappNumber: "03 550 789",
+    contactEmail: "info@latelylebanon.com",
+    announcementActive: false,
+    heroHeading: "Hello",
+    featuredBrandIds: [],
+    featuredProductIds: [],
+  };
+
+  it("is optional and normalised when given", () => {
+    expect(settingsSchema.parse(base).whatsappNumber2).toBeNull();
+    expect(settingsSchema.parse({ ...base, whatsappNumber2: "" }).whatsappNumber2).toBeNull();
+    expect(settingsSchema.parse({ ...base, whatsappNumber2: "+961 03 168 527" }).whatsappNumber2).toBe("+9613168527");
+  });
+
+  it("rejects a number that isn't Lebanese", () => {
+    expect(settingsSchema.safeParse({ ...base, whatsappNumber2: "12345" }).success).toBe(false);
+  });
+
+  it("lists the main number first and skips an empty or repeated second one", () => {
+    expect(whatsappNumbers({ whatsappNumber: "+9613550789", whatsappNumber2: "+9613168527" })).toEqual(["+9613550789", "+9613168527"]);
+    expect(whatsappNumbers({ whatsappNumber: "+9613550789", whatsappNumber2: null })).toEqual(["+9613550789"]);
+    expect(whatsappNumbers({ whatsappNumber: "+9613550789", whatsappNumber2: "+9613550789" })).toEqual(["+9613550789"]);
   });
 });
