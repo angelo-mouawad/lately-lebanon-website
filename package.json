@@ -10,7 +10,7 @@
     "dev:api": "npm run dev -w api",
     "dev:web": "npm run dev -w web",
     "build": "npm run build:web",
-    "build:api": "npm run build -w api",
+    "build:api": "npm run build -w api && npm run db:deploy -w api",
     "build:web": "npm run build -w web",
     "start:api": "npm run start -w api",
     "start:web": "npm run start -w web",

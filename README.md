@@ -170,17 +170,16 @@ Create two separate mailboxes in hPanel under **Emails** before the first order:
 
 ### 4. Database migrations
 
-Run migrations once before the first start, and after every deploy that changes `api/prisma/schema.prisma`. Pick one of these:
+Migrations run automatically on every deploy: `npm run build:api` builds the API and then runs `prisma migrate deploy`, which only applies new migrations, so it's safe to repeat. If a migration fails, the build fails and the previous version stays live. Set `CHECKPOINT_DISABLE=1` in the app's environment variables so the Prisma CLI doesn't hang trying to reach its update server.
 
-- **Over SSH** (recommended, you stay in control):
+Running `npm run build:api` locally also migrates your local database.
 
-  ```bash
-  cd ~/path-to-the-api-app
-  npm run db:deploy -w api
-  npm run db:seed -w api     # first deploy only: creates the owner account (and sample shop if empty)
-  ```
+The first deploy also needs the seed, run once over SSH:
 
-- **As part of the build:** change the build command to `npm run build:api && npm run db:deploy -w api`. Migrations then run on every deploy. `prisma migrate deploy` only applies new migrations, so this is safe to repeat.
+```bash
+cd ~/domains/api.latelylebanon.com/hbuilds/current/nodejs
+npm run db:seed -w api     # creates the owner account (and sample shop if empty)
+```
 
 To start the live shop without the sample makers and products, set `SEED_SAMPLE_CATALOG=false` before running the seed. It then creates only the owner account and default settings.
 
