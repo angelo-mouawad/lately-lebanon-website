@@ -36,7 +36,8 @@ export async function notifyNewOrder(orderId: number): Promise<void> {
 
     const sends: Promise<boolean>[] = [];
     if (order.email) {
-      sends.push(sendMail({ to: order.email, replyTo: settings.contactEmail, ...customerConfirmation(emailOrder, ctx) }));
+      // No reply-to: customer replies go back to the sending orders mailbox, not the general contact address.
+      sends.push(sendMail({ to: order.email, ...customerConfirmation(emailOrder, ctx) }));
     }
     sends.push(
       sendMail({

@@ -154,7 +154,7 @@ Environment variables (see `api/.env.example` for every option):
 | `SMTP_PORT` / `SMTP_SECURE` | `465` / `true` |
 | `SMTP_USER` / `SMTP_PASS` | the `orders@latelylebanon.com` mailbox and its password |
 | `MAIL_FROM` | `Lately Lebanon <orders@latelylebanon.com>` |
-| `ADMIN_NOTIFY_EMAIL` | `info@latelylebanon.com` |
+| `ADMIN_NOTIFY_EMAIL` | `orders@latelylebanon.com` |
 | `CRON_SECRET` | a long random string |
 | `REVALIDATE_URL` | `https://latelylebanon.com/api/revalidate` |
 | `REVALIDATE_SECRET` | a long random string, the same one as in the web app |
@@ -165,7 +165,7 @@ Environment variables (see `api/.env.example` for every option):
 
 The plan has 50 GB and 600,000 files. Each photo uses 3 files. If space gets tight, switch to Cloudflare R2: set `UPLOAD_DRIVER=s3`, the `S3_*` variables and `UPLOADS_PUBLIC_URL`, and copy the existing uploads folder into the bucket.
 
-Create the mailbox `orders@latelylebanon.com` in hPanel under **Emails** before the first order, and `info@latelylebanon.com` for notifications.
+Create two separate mailboxes in hPanel under **Emails** before the first order: `orders@latelylebanon.com` sends order emails and receives new-order alerts and customer replies, and `info@latelylebanon.com` is the public contact address for general questions (set it under Admin > Homepage and shop > Contact email).
 
 ### 4. Database migrations
 
