@@ -59,10 +59,6 @@ export const en = {
         title: "What can I discover here?",
         text: "Products from a growing selection of Lebanese brands, from emerging labels to names you may already follow. Browse by category or by brand, see what's new, and find your next favourite along the way.",
       },
-      {
-        title: "Why shop here instead of a brand's Instagram page?",
-        text: "Because everything is in one place. Prices and availability are right there, with no waiting on a reply to a message. Fill one bag from several brands, check out once, and pay cash on delivery anywhere in Lebanon.",
-      },
     ],
     galleryTitle: "Fresh finds",
     galleryHandle: "Follow us on Instagram",
