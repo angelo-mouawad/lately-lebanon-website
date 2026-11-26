@@ -39,6 +39,7 @@ export default function BrandsPage() {
                   <p className="truncate font-medium">{b.name}</p>
                   <p className="text-sm text-muted tabular-nums">
                     {b.productCount} {b.productCount === 1 ? "product" : "products"} · {b.commissionPct}% commission
+                    {b.ownDelivery && " · Own delivery"}
                   </p>
                 </div>
                 <Badge tone={b.isActive ? "olive" : "neutral"}>{b.isActive ? "On website" : "Hidden"}</Badge>

@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { AdminBrand, AdminBrandRow, brandSchema } from "@latelylebanon/shared";
 import { conflict, notFound } from "../lib/errors";
-import { prisma } from "../lib/prisma";
+import { prisma, type Tx } from "../lib/prisma";
 import { maybeImageSet } from "../storage/images";
 import { deleteUnusedImages } from "./image-cleanup";
 import { uniqueSlug } from "./slugs";
@@ -24,12 +24,16 @@ export async function listAdminBrands(): Promise<AdminBrandRow[]> {
     logo: maybeImageSet(b.logoKey, b.name),
     isActive: b.isActive,
     commissionPct: Number(b.commissionPct),
+    ownDelivery: b.ownDelivery,
     productCount: b._count.products,
   }));
 }
 
 export async function getAdminBrand(id: number): Promise<AdminBrand> {
-  const b = await prisma.brand.findUnique({ where: { id } });
+  const b = await prisma.brand.findUnique({
+    where: { id },
+    include: { deliveryFees: { select: { zoneId: true, feeCents: true } } },
+  });
   if (!b) throw notFound("That brand");
   return {
     id: b.id,
@@ -43,6 +47,8 @@ export async function getAdminBrand(id: number): Promise<AdminBrand> {
     phone: b.phone,
     email: b.email,
     commissionPct: Number(b.commissionPct),
+    ownDelivery: b.ownDelivery,
+    deliveryFees: b.deliveryFees,
     internalNotes: b.internalNotes,
     isActive: b.isActive,
   };
@@ -59,17 +65,34 @@ function fields(data: BrandData) {
     phone: data.phone,
     email: data.email,
     commissionPct: data.commissionPct,
+    ownDelivery: data.ownDelivery,
     internalNotes: data.internalNotes,
     isActive: data.isActive,
   };
+}
+
+/**
+ * Replaces the brand's delivery prices. Prices are kept when own delivery is switched
+ * off, so switching it back on brings them back. Areas that no longer exist are skipped.
+ */
+async function saveDeliveryFees(tx: Tx, brandId: number, fees: BrandData["deliveryFees"]) {
+  const zoneIds = new Set(
+    (await tx.deliveryZone.findMany({ where: { id: { in: fees.map((f) => f.zoneId) } }, select: { id: true } })).map((z) => z.id),
+  );
+  await tx.brandDeliveryFee.deleteMany({ where: { brandId } });
+  const rows = fees.filter((f) => zoneIds.has(f.zoneId)).map((f) => ({ brandId, zoneId: f.zoneId, feeCents: f.feeCents }));
+  if (rows.length > 0) await tx.brandDeliveryFee.createMany({ data: rows });
 }
 
 export async function createBrand(data: BrandData): Promise<AdminBrand> {
   if (data.slug && (await slugTaken()(data.slug))) {
     throw conflict("Another brand already uses this web address.", { slug: "Already used by another brand" });
   }
-  const brand = await prisma.brand.create({
-    data: { ...fields(data), slug: data.slug ?? (await uniqueSlug(data.name, slugTaken())) },
+  const slug = data.slug ?? (await uniqueSlug(data.name, slugTaken()));
+  const brand = await prisma.$transaction(async (tx) => {
+    const created = await tx.brand.create({ data: { ...fields(data), slug } });
+    await saveDeliveryFees(tx, created.id, data.deliveryFees);
+    return created;
   });
   refreshWebsite("catalog");
   return getAdminBrand(brand.id);
@@ -82,7 +105,10 @@ export async function updateBrand(id: number, data: BrandData): Promise<AdminBra
   if (slug !== existing.slug && (await slugTaken(id)(slug))) {
     throw conflict("Another brand already uses this web address.", { slug: "Already used by another brand" });
   }
-  await prisma.brand.update({ where: { id }, data: { ...fields(data), slug } });
+  await prisma.$transaction(async (tx) => {
+    await tx.brand.update({ where: { id }, data: { ...fields(data), slug } });
+    await saveDeliveryFees(tx, id, data.deliveryFees);
+  });
   await deleteUnusedImages(
     [existing.logoKey, existing.coverKey].filter((k) => k !== data.logoKey && k !== data.coverKey),
   );

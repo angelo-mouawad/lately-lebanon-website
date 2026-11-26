@@ -148,20 +148,38 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Please enter your password").max(200),
 });
 
-export const brandSchema = z.object({
-  name: text(120, "Please enter the brand name"),
-  slug,
-  logoKey: imageKey.nullish(),
-  coverKey: imageKey.nullish(),
-  story: z.string().trim().max(5000).default(""),
-  instagramUrl: optionalUrl,
-  contactName: optionalText(120),
-  phone: optionalText(40),
-  email: optionalEmail,
-  commissionPct: percent,
-  internalNotes: optionalText(5000),
-  isActive: z.boolean().default(true),
-});
+export const brandSchema = z
+  .object({
+    name: text(120, "Please enter the brand name"),
+    slug,
+    logoKey: imageKey.nullish(),
+    coverKey: imageKey.nullish(),
+    story: z.string().trim().max(5000).default(""),
+    instagramUrl: optionalUrl,
+    contactName: optionalText(120),
+    phone: optionalText(40),
+    email: optionalEmail,
+    commissionPct: percent,
+    ownDelivery: z.boolean().default(false),
+    deliveryFees: z
+      .array(z.object({ zoneId: z.number().int().positive(), feeCents: cents("Please enter the delivery fee") }))
+      .max(500)
+      .default([]),
+    internalNotes: optionalText(5000),
+    isActive: z.boolean().default(true),
+  })
+  .superRefine((b, ctx) => {
+    if (b.ownDelivery && b.deliveryFees.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["deliveryFees"],
+        message: "Enter the brand's price for at least one delivery area, or switch off its own delivery",
+      });
+    }
+    if (new Set(b.deliveryFees.map((f) => f.zoneId)).size !== b.deliveryFees.length) {
+      ctx.addIssue({ code: "custom", path: ["deliveryFees"], message: "Each area can only have one price" });
+    }
+  });
 export type BrandInput = z.input<typeof brandSchema>;
 
 export const categorySchema = z.object({

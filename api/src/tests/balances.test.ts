@@ -27,6 +27,7 @@ describe("brand balance calculation", () => {
       brandName: "Dar Zeitoun",
       totalSalesCents: 15000,
       commissionCents: 3250,
+      deliveryFeesCents: 0,
       owedToBrandCents: 11750,
       paidOutCents: 6000,
       balanceCents: 5750,
@@ -41,6 +42,7 @@ describe("brand balance calculation", () => {
       brandName: "Nawl Studio",
       totalSalesCents: 0,
       commissionCents: 0,
+      deliveryFeesCents: 0,
       owedToBrandCents: 0,
       paidOutCents: 0,
       balanceCents: 0,
@@ -74,5 +76,25 @@ describe("brand balance calculation", () => {
     );
     expect(balances).toHaveLength(1);
     expect(balances[0]?.totalSalesCents).toBe(0);
+  });
+
+  it("adds a brand's own delivery fees to what we owe it, with no commission", () => {
+    const [balance] = computeBrandBalances(
+      [brands[0]!],
+      [{ brandId: 1, lineTotalCents: 10000, commissionPct: 20 }],
+      [{ brandId: 1, amountCents: 5000 }],
+      [
+        { brandId: 1, feeCents: 300 },
+        { brandId: 1, feeCents: 500 },
+        { brandId: 42, feeCents: 900 },
+      ],
+    );
+    expect(balance).toMatchObject({
+      totalSalesCents: 10000,
+      commissionCents: 2000,
+      deliveryFeesCents: 800,
+      owedToBrandCents: 8800,
+      balanceCents: 3800,
+    });
   });
 });

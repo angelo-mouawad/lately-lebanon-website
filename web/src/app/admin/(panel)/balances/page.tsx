@@ -120,11 +120,12 @@ function Balances() {
     (t, b) => ({
       sales: t.sales + b.totalSalesCents,
       commission: t.commission + b.commissionCents,
+      delivery: t.delivery + b.deliveryFeesCents,
       owed: t.owed + b.owedToBrandCents,
       paid: t.paid + b.paidOutCents,
       balance: t.balance + b.balanceCents,
     }),
-    { sales: 0, commission: 0, owed: 0, paid: 0, balance: 0 },
+    { sales: 0, commission: 0, delivery: 0, owed: 0, paid: 0, balance: 0 },
   );
 
   function reload() {
@@ -149,7 +150,7 @@ function Balances() {
     <>
       <PageHeader
         title="Brand balances"
-        description="What each brand has sold, what we keep, and what we still owe them. Only delivered orders count."
+        description="What each brand has sold, what we keep, and what we still owe them. Only delivered orders count. Brands with their own delivery service also get the delivery fees they charged."
         actions={
           <>
             <a href={adminUrl("/balances.csv")} className={buttonClass("secondary", "md")} download>
@@ -173,6 +174,7 @@ function Balances() {
               <TH>Brand</TH>
               <TH className="text-right">Sales</TH>
               <TH className="text-right">Our commission</TH>
+              <TH className="text-right">Their delivery fees</TH>
               <TH className="text-right">Owed to brand</TH>
               <TH className="text-right">Paid out</TH>
               <TH className="text-right">Still to pay</TH>
@@ -187,6 +189,7 @@ function Balances() {
                 <TD className="font-medium whitespace-nowrap">{b.brandName}</TD>
                 <TD className="text-right tabular-nums">{formatUSD(b.totalSalesCents)}</TD>
                 <TD className="text-right tabular-nums">{formatUSD(b.commissionCents)}</TD>
+                <TD className="text-right tabular-nums">{formatUSD(b.deliveryFeesCents)}</TD>
                 <TD className="text-right tabular-nums">{formatUSD(b.owedToBrandCents)}</TD>
                 <TD className="text-right tabular-nums">{formatUSD(b.paidOutCents)}</TD>
                 <TD className={cn("text-right font-medium tabular-nums", b.balanceCents > 0 && "text-terracotta", b.balanceCents < 0 && "text-danger")}>
@@ -203,6 +206,7 @@ function Balances() {
               <TD>All brands</TD>
               <TD className="text-right tabular-nums">{formatUSD(totals.sales)}</TD>
               <TD className="text-right tabular-nums">{formatUSD(totals.commission)}</TD>
+              <TD className="text-right tabular-nums">{formatUSD(totals.delivery)}</TD>
               <TD className="text-right tabular-nums">{formatUSD(totals.owed)}</TD>
               <TD className="text-right tabular-nums">{formatUSD(totals.paid)}</TD>
               <TD className="text-right tabular-nums">{formatUSD(totals.balance)}</TD>

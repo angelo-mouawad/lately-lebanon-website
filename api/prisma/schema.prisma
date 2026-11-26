@@ -70,14 +70,18 @@ model Brand {
   phone         String?  @db.VarChar(40)
   email         String?  @db.VarChar(190)
   commissionPct Decimal  @default(20) @db.Decimal(5, 2)
+  // On: the brand delivers its own products, at its prices in BrandDeliveryFee.
+  ownDelivery   Boolean  @default(false)
   internalNotes String?  @db.Text
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  products   Product[]
-  orderItems OrderItem[]
-  payouts    BrandPayout[]
+  products        Product[]
+  orderItems      OrderItem[]
+  payouts         BrandPayout[]
+  deliveryFees    BrandDeliveryFee[]
+  orderDeliveries OrderBrandDelivery[]
 
   @@index([isActive])
 }
@@ -181,6 +185,7 @@ model Order {
   address          String        @db.Text
   notes            String?       @db.Text
   subtotalCents    Int
+  // Our fee plus any brand delivery fees (see OrderBrandDelivery).
   deliveryFeeCents Int
   discountCents    Int           @default(0)
   totalCents       Int
@@ -194,11 +199,12 @@ model Order {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  deliveryZone DeliveryZone?      @relation(fields: [deliveryZoneId], references: [id], onDelete: SetNull)
-  promo        PromoCode?         @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
-  items        OrderItem[]
-  payments     Payment[]
-  events       OrderStatusEvent[]
+  deliveryZone    DeliveryZone?        @relation(fields: [deliveryZoneId], references: [id], onDelete: SetNull)
+  promo           PromoCode?           @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+  payments        Payment[]
+  events          OrderStatusEvent[]
+  brandDeliveries OrderBrandDelivery[]
 
   @@index([createdAt])
   @@index([status, createdAt])
@@ -286,7 +292,37 @@ model DeliveryZone {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders Order[]
+  orders    Order[]
+  brandFees BrandDeliveryFee[]
+}
+
+// A brand's own delivery price for one of our delivery areas. Only used while the
+// brand's ownDelivery is on. No row for an area means we deliver there at our fee.
+model BrandDeliveryFee {
+  brandId  Int
+  zoneId   Int
+  feeCents Int
+
+  brand Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  zone  DeliveryZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+
+  @@id([brandId, zoneId])
+  @@index([zoneId])
+}
+
+// A brand that delivered its own items on an order, and the fee it charged.
+// Copied at purchase time. The fee is owed to the brand.
+model OrderBrandDelivery {
+  id       Int @id @default(autoincrement())
+  orderId  Int
+  brandId  Int
+  feeCents Int
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  brand Brand @relation(fields: [brandId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, brandId])
+  @@index([brandId])
 }
 
 model PromoCode {
@@ -317,9 +353,9 @@ model AdminUser {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  sessions     AdminSession[]
-  orderEvents  OrderStatusEvent[]
-  payouts      BrandPayout[]
+  sessions    AdminSession[]
+  orderEvents OrderStatusEvent[]
+  payouts     BrandPayout[]
 }
 
 model AdminSession {
@@ -338,18 +374,18 @@ model AdminSession {
 }
 
 model Settings {
-  id                         Int     @id @default(1)
-  storeName                  String  @default("Lately Lebanon") @db.VarChar(80)
-  whatsappNumber             String  @db.VarChar(20)
-  whatsappNumber2            String? @db.VarChar(20)
-  contactEmail              String  @db.VarChar(190)
-  instagramUrl               String? @db.VarChar(255)
+  id                         Int      @id @default(1)
+  storeName                  String   @default("Lately Lebanon") @db.VarChar(80)
+  whatsappNumber             String   @db.VarChar(20)
+  whatsappNumber2            String?  @db.VarChar(20)
+  contactEmail               String   @db.VarChar(190)
+  instagramUrl               String?  @db.VarChar(255)
   freeDeliveryThresholdCents Int?
-  announcementText           String? @db.VarChar(200)
-  announcementActive         Boolean @default(false)
-  heroHeading                String  @db.VarChar(120)
-  heroText                   String  @db.VarChar(400)
-  heroImageKey               String? @db.VarChar(255)
+  announcementText           String?  @db.VarChar(200)
+  announcementActive         Boolean  @default(false)
+  heroHeading                String   @db.VarChar(120)
+  heroText                   String   @db.VarChar(400)
+  heroImageKey               String?  @db.VarChar(255)
   /// number[]
   featuredBrandIds           Json
   /// number[]

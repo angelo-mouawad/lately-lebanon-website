@@ -102,10 +102,12 @@ export async function getOrder(id: number): Promise<AdminOrder> {
       },
       events: { orderBy: { createdAt: "asc" }, include: { adminUser: { select: { name: true } } } },
       payments: { orderBy: { createdAt: "asc" } },
+      brandDeliveries: { include: { brand: { select: { name: true, phone: true } } }, orderBy: { id: "asc" } },
       _count: { select: { items: true } },
     },
   });
   if (!o) throw notFound("That order");
+  const brandDelivers = new Set(o.brandDeliveries.map((d) => d.brandId));
   return {
     ...toOrderRow(o),
     email: o.email,
@@ -127,7 +129,14 @@ export async function getOrder(id: number): Promise<AdminOrder> {
       unitPriceCents: i.unitPriceCents,
       lineTotalCents: i.lineTotalCents,
       commissionPct: Number(i.commissionPct),
+      deliveredByBrand: brandDelivers.has(i.brandId),
       image: maybeImageSet(i.product.images[0]?.key, i.productName),
+    })),
+    brandDeliveries: o.brandDeliveries.map((d) => ({
+      brandId: d.brandId,
+      brandName: d.brand.name,
+      phone: d.brand.phone,
+      feeCents: d.feeCents,
     })),
     history: o.events.map((e) => ({
       status: e.status,

@@ -13,6 +13,7 @@ import {
 } from "@latelylebanon/shared";
 import { adminFetch } from "@/lib/admin-api";
 import { whatsappLink } from "@/lib/whatsapp";
+import { Badge } from "@/components/ui/Badge";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Field, Textarea } from "@/components/ui/Field";
 import { WhatsAppIcon } from "@/components/ui/icons";
@@ -132,6 +133,26 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
           </Section>
 
           <Section title="Items">
+            {order.brandDeliveries.length > 0 && (
+              <div className="mb-4 border border-terracotta p-3 text-sm">
+                {order.brandDeliveries.map((d) => (
+                  <p key={d.brandId}>
+                    <span className="font-medium">{d.brandName}</span> delivers its own items on this order
+                    {d.phone && (
+                      <>
+                        {" "}
+                        (
+                        <a href={`tel:${d.phone}`} className="underline underline-offset-2">
+                          {d.phone}
+                        </a>
+                        )
+                      </>
+                    )}
+                    . Let them know so they can deliver.
+                  </p>
+                ))}
+              </div>
+            )}
             <ul className="divide-y divide-line border-y border-line">
               {order.items.map((item) => (
                 <li key={item.id} className="flex gap-4 py-4">
@@ -158,6 +179,11 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                         </>
                       )}
                     </p>
+                    {item.deliveredByBrand && (
+                      <Badge tone="accent" className="mt-1.5">
+                        Brand delivers
+                      </Badge>
+                    )}
                   </div>
                   <div className="text-right text-sm tabular-nums">
                     <p>
@@ -184,6 +210,24 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                 <dt className="text-muted">Delivery ({order.region})</dt>
                 <dd className="tabular-nums">{order.deliveryFeeCents === 0 ? "Free" : formatUSD(order.deliveryFeeCents)}</dd>
               </div>
+              {order.brandDeliveries.length > 0 && (
+                <>
+                  {order.items.some((i) => !i.deliveredByBrand) && (
+                    <div className="flex justify-between pl-3 text-xs">
+                      <dt className="text-muted">Us</dt>
+                      <dd className="tabular-nums">
+                        {formatUSD(order.deliveryFeeCents - order.brandDeliveries.reduce((sum, d) => sum + d.feeCents, 0))}
+                      </dd>
+                    </div>
+                  )}
+                  {order.brandDeliveries.map((d) => (
+                    <div key={d.brandId} className="flex justify-between pl-3 text-xs">
+                      <dt className="text-muted">{d.brandName}</dt>
+                      <dd className="tabular-nums">{formatUSD(d.feeCents)}</dd>
+                    </div>
+                  ))}
+                </>
+              )}
               <div className="flex justify-between border-t border-ink pt-2 text-base font-medium">
                 <dt>Total</dt>
                 <dd className="tabular-nums">{formatUSD(order.totalCents)}</dd>

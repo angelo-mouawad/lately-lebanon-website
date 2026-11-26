@@ -98,6 +98,7 @@ npm run typecheck  # all three packages
 - **Stock** is checked and decremented in the same database transaction that creates the order. Two people can't buy the last item.
 - **Commission** is copied onto each order item at purchase time. Changing a brand's commission later never changes old orders or balances.
 - **Brand balances** count delivered orders only. Cancelled and returned orders don't count.
+- **Brands with their own delivery** (switch on the brand page) set a price for each of our delivery areas. At checkout each such brand charges its fee once for its items, and we charge our area fee once for everything else. An area left empty on the brand page falls back to us delivering at our fee. Free delivery only waives our fee, never a brand's. Brand delivery fees are copied onto the order and owed to the brand in full in balances, with no commission.
 - **Cancelled orders** put their stock back automatically. Returned orders don't, because returned items may not be sellable: update stock by hand if they are.
 - **Images** are resized on upload to WebP at 400, 800 and 1600 px. The original is discarded. The storefront picks the right size for each screen, so the server never re-encodes images.
 - **Caching:** storefront pages read the API through Next.js' data cache. When someone saves something in the admin, the API calls `web/api/revalidate` and the affected pages refresh within seconds. Most visits never reach the API or the database.
@@ -280,7 +281,7 @@ All business logic lives in `api/src/services` and doesn't import Express. To me
 This part is for whoever runs the shop day to day. You don't need any technical knowledge.
 
 1. Go to **latelylebanon.com/admin** and log in.
-2. Make sure the maker exists: click **Brands** in the menu. If they're not in the list, click **Add a brand**, fill in their name, their story and our commission, add their logo and a cover photo, and click **Add brand**.
+2. Make sure the maker exists: click **Brands** in the menu. If they're not in the list, click **Add a brand**, fill in their name, their story and our commission, add their logo and a cover photo, and click **Add brand**. If the maker delivers their own orders, turn on **Brand has its own delivery service** and type their price next to each area they deliver to. Leave an area empty and we deliver there at our usual price.
 3. Click **Products** in the menu, then **Add a product**.
 4. **Basics:** type the product name, choose the brand and the category, and write a short description. Two or three short paragraphs is plenty.
 5. **Price:** type the price in dollars. Only fill in "Old price" when the product is on sale: it shows crossed out next to the new price.

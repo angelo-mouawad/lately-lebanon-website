@@ -8,6 +8,16 @@ import { Skeleton } from "@/components/ui/Skeleton";
 
 const t = getMessages();
 
+/** One part of the delivery fee, shown under the Delivery row when brands deliver their own items. */
+function SubRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between pl-3 text-sm text-muted">
+      <dt>{label}</dt>
+      <dd className="tabular-nums">{value}</dd>
+    </div>
+  );
+}
+
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className={strong ? "flex items-baseline justify-between border-t border-ink pt-4 text-lg" : "flex items-baseline justify-between text-[15px]"}>
@@ -41,6 +51,19 @@ export function Totals({ quote, zoneChosen }: { quote: QuoteResult | null; zoneC
       <Row label={t.cart.subtotal} value={formatUSD(quote.subtotalCents)} />
       {quote.discountCents > 0 && <Row label={t.cart.discount} value={`-${formatUSD(quote.discountCents)}`} />}
       <Row label={t.cart.delivery} value={delivery} />
+      {quote.brandDeliveries.length > 0 && (
+        <>
+          {quote.shopDeliveryFeeCents != null && (
+            <SubRow
+              label={t.cart.deliveryByUs}
+              value={quote.shopDeliveryFeeCents > 0 ? formatUSD(quote.shopDeliveryFeeCents) : t.common.free}
+            />
+          )}
+          {quote.brandDeliveries.map((d) => (
+            <SubRow key={d.brandName} label={fmt(t.cart.deliveryByBrand, { brand: d.brandName })} value={formatUSD(d.feeCents)} />
+          ))}
+        </>
+      )}
       <Row label={t.cart.total} value={formatUSD(quote.totalCents)} strong />
     </dl>
   );

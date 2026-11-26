@@ -22,6 +22,8 @@ export interface EmailOrder {
   promoCode: string | null;
   paymentMethod: PaymentMethod;
   items: { productName: string; variantLabel: string; quantity: number; lineTotalCents: number; brandName: string }[];
+  /** Brands delivering their own items on this order, with the fee they charged. */
+  brandDeliveries: { brandName: string; feeCents: number }[];
 }
 
 export interface EmailContext {
@@ -156,7 +158,12 @@ ${textFooter(ctx)}`;
   return { subject: `Your ${ctx.storeName} order ${order.number}`, html, text };
 }
 
+/** "Nawl Studio delivers its own items (delivery fee $3)." One line per brand. */
+const brandDeliveryLines = (order: EmailOrder) =>
+  order.brandDeliveries.map((d) => `${d.brandName} delivers its own items (delivery fee ${formatUSD(d.feeCents)}).`);
+
 export function adminNewOrder(order: EmailOrder, ctx: EmailContext, adminUrl: string) {
+  const brandLines = brandDeliveryLines(order);
   const html = layout(
     ctx,
     `<h1 style="margin:0 0 12px;font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:24px;">New order ${escape(order.number)}</h1>
@@ -164,6 +171,7 @@ export function adminNewOrder(order: EmailOrder, ctx: EmailContext, adminUrl: st
 <p style="margin:0 0 4px;">${escape(order.address)}, ${escape(order.city)}, ${escape(order.region)}</p>
 <p style="margin:0 0 12px;">Payment: ${PAYMENT_METHOD_LABELS[order.paymentMethod]}</p>
 ${order.notes ? `<p style="margin:0 0 12px;padding:10px;border:1px solid ${line};">Note: ${escape(order.notes)}</p>` : ""}
+${brandLines.length ? `<p style="margin:0 0 12px;padding:10px;border:1px solid ${accent};">${brandLines.map(escape).join("<br>")}<br>Let them know about this order so they can deliver their items.</p>` : ""}
 ${itemsTable(order)}
 <p style="margin:0;"><a href="${adminUrl}" style="display:inline-block;padding:12px 20px;background:${ink};color:#FFFFFF;text-decoration:none;font-size:14px;">Open in admin</a></p>`,
   );
@@ -171,7 +179,7 @@ ${itemsTable(order)}
 ${order.customerName}, ${formatLebanesePhone(order.phone)}${order.email ? `, ${order.email}` : ""}
 ${order.address}, ${order.city}, ${order.region}
 Payment: ${PAYMENT_METHOD_LABELS[order.paymentMethod]}
-${order.notes ? `Note: ${order.notes}\n` : ""}
+${order.notes ? `Note: ${order.notes}\n` : ""}${brandLines.length ? `${brandLines.join("\n")}\nLet them know about this order so they can deliver their items.\n` : ""}
 ${itemsText(order)}
 
 ${adminUrl}

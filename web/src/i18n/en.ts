@@ -146,6 +146,8 @@ export const en = {
     discount: "Discount",
     delivery: "Delivery",
     deliveryAtCheckout: "Calculated at checkout",
+    deliveryByUs: "By us",
+    deliveryByBrand: "By {brand}",
     total: "Total",
     checkout: "Checkout",
     viewBag: "View bag",

@@ -65,6 +65,20 @@ async function activeZone(db: Db, zoneId: number | null | undefined) {
 }
 
 /**
+ * Brand id to fee, for brands in the cart that deliver themselves to this zone.
+ * Brands with their own delivery switched off, or no price for this zone, are left
+ * out: we deliver their items at our usual fee.
+ */
+async function brandFeesForZone(db: Db, zoneId: number | null | undefined, brandIds: number[]): Promise<Map<number, number>> {
+  if (!zoneId || brandIds.length === 0) return new Map();
+  const rows = await db.brandDeliveryFee.findMany({
+    where: { zoneId, brandId: { in: [...new Set(brandIds)] }, brand: { ownDelivery: true } },
+    select: { brandId: true, feeCents: true },
+  });
+  return new Map(rows.map((r) => [r.brandId, r.feeCents]));
+}
+
+/**
  * Prices a cart from the database. Used by the cart and checkout pages to show
  * up to date prices, stock and totals. Never trusts prices from the browser.
  */
@@ -76,6 +90,10 @@ export async function quoteCart(input: CartQuoteInput): Promise<QuoteResult> {
     findPromo(prisma, input.promoCode),
     loadSettings(),
   ]);
+
+  const brandIdOf = new Map([...variants.values()].map((v) => [v.id, v.product.brandId]));
+  const brandNames = new Map([...variants.values()].map((v) => [v.product.brandId, v.product.brand.name]));
+  const brandFees = zone ? await brandFeesForZone(prisma, zone.id, [...brandNames.keys()]) : new Map<number, number>();
 
   const quoteLines: QuoteLine[] = lines.flatMap(({ variantId, quantity }) => {
     const v = variants.get(variantId);
@@ -104,8 +122,9 @@ export async function quoteCart(input: CartQuoteInput): Promise<QuoteResult> {
   });
 
   const totals = computeTotals({
-    lines: quoteLines,
+    lines: quoteLines.map((l) => ({ ...l, brandId: brandIdOf.get(l.variantId) })),
     zoneFeeCents: zone?.feeCents ?? null,
+    brandFees,
     freeDeliveryThresholdCents: settings.freeDeliveryThresholdCents,
     promo,
   });
@@ -115,6 +134,8 @@ export async function quoteCart(input: CartQuoteInput): Promise<QuoteResult> {
     subtotalCents: totals.subtotalCents,
     discountCents: totals.discountCents,
     deliveryFeeCents: totals.deliveryFeeCents,
+    shopDeliveryFeeCents: totals.shopDelivers ? totals.shopDeliveryFeeCents : null,
+    brandDeliveries: totals.brandDeliveries.map((d) => ({ brandName: brandNames.get(d.brandId) ?? "", feeCents: d.feeCents })),
     totalCents: totals.totalCents,
     freeDeliveryThresholdCents: settings.freeDeliveryThresholdCents,
     promo: input.promoCode?.trim()
@@ -174,9 +195,11 @@ export async function placeOrder(data: CheckoutData): Promise<CheckoutResult> {
         lines,
         new Map([...variants].map(([id, v]) => [id, toPurchasable(v)])),
       );
+      const brandFees = await brandFeesForZone(tx, zone.id, items.map((i) => i.brandId));
       const totals = computeTotals({
         lines: items,
         zoneFeeCents: zone.feeCents,
+        brandFees,
         freeDeliveryThresholdCents: settings.freeDeliveryThresholdCents,
         promo,
       });
@@ -211,6 +234,7 @@ export async function placeOrder(data: CheckoutData): Promise<CheckoutResult> {
           paymentMethod: provider.method,
           paymentStatus: provider.method === "COD" ? "UNPAID" : "PENDING",
           items: { create: items },
+          brandDeliveries: { create: totals.brandDeliveries },
           events: { create: { status: "NEW" } },
           payments: { create: { provider: provider.method, amountCents: totals.totalCents } },
         },

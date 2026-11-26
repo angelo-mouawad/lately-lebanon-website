@@ -16,7 +16,10 @@ export async function notifyNewOrder(orderId: number): Promise<void> {
     const [order, settings] = await Promise.all([
       prisma.order.findUnique({
         where: { id: orderId },
-        include: { items: { include: { brand: { select: { name: true } } } } },
+        include: {
+          items: { include: { brand: { select: { name: true } } } },
+          brandDeliveries: { include: { brand: { select: { name: true } } }, orderBy: { id: "asc" } },
+        },
       }),
       loadSettings(),
     ]);
@@ -31,6 +34,7 @@ export async function notifyNewOrder(orderId: number): Promise<void> {
         lineTotalCents: i.lineTotalCents,
         brandName: i.brand.name,
       })),
+      brandDeliveries: order.brandDeliveries.map((d) => ({ brandName: d.brand.name, feeCents: d.feeCents })),
     };
     const ctx = { storeName: settings.storeName, webOrigin: env.WEB_ORIGIN, whatsappNumbers: whatsappNumbers(settings) };
 

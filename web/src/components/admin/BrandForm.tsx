@@ -2,16 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { brandSchema, slugify, type AdminBrand, type ImageSet } from "@latelylebanon/shared";
+import { brandSchema, formatUSD, slugify, type AdminBrand, type AdminDeliveryZone, type ImageSet } from "@latelylebanon/shared";
 import { adminFetch } from "@/lib/admin-api";
 import { SITE_URL } from "@/lib/config";
 import { zodFields } from "@/lib/zod-fields";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Field, Input, Switch, Textarea } from "@/components/ui/Field";
+import { Field, Input, MoneyInput, Switch, Textarea } from "@/components/ui/Field";
 import { ConfirmDialog } from "@/components/ui/Modal";
 import { useToast } from "./Toast";
-import { Advanced, FormError, Section } from "./ui";
+import { Advanced, ErrorBlock, FormError, LoadingBlock, Section } from "./ui";
 import { SingleImageUpload } from "./uploads";
+import { useAdminQuery } from "./use-admin-query";
 import { useSave } from "./use-save";
 
 interface Draft {
@@ -25,6 +27,9 @@ interface Draft {
   phone: string;
   email: string;
   commissionPct: number | null;
+  ownDelivery: boolean;
+  /** Delivery area id to the brand's price in cents. Missing or null: we deliver to that area. */
+  deliveryFees: Record<number, number | null>;
   internalNotes: string;
   isActive: boolean;
 }
@@ -40,6 +45,8 @@ const empty: Draft = {
   phone: "",
   email: "",
   commissionPct: 20,
+  ownDelivery: false,
+  deliveryFees: {},
   internalNotes: "",
   isActive: true,
 };
@@ -56,6 +63,8 @@ function fromBrand(b: AdminBrand): Draft {
     phone: b.phone ?? "",
     email: b.email ?? "",
     commissionPct: b.commissionPct,
+    ownDelivery: b.ownDelivery,
+    deliveryFees: Object.fromEntries(b.deliveryFees.map((f) => [f.zoneId, f.feeCents])),
     internalNotes: b.internalNotes ?? "",
     isActive: b.isActive,
   };
@@ -73,9 +82,65 @@ function toInput(d: Draft) {
     phone: d.phone,
     email: d.email,
     commissionPct: d.commissionPct,
+    ownDelivery: d.ownDelivery,
+    deliveryFees: Object.entries(d.deliveryFees).flatMap(([zoneId, feeCents]) =>
+      feeCents == null ? [] : [{ zoneId: Number(zoneId), feeCents }],
+    ),
     internalNotes: d.internalNotes,
     isActive: d.isActive,
   };
+}
+
+/** The brand's own price for each of our delivery areas, laid out like the Delivery areas page. */
+function BrandDeliveryPrices({
+  fees,
+  onChange,
+  error,
+}: {
+  fees: Draft["deliveryFees"];
+  onChange: (fees: Draft["deliveryFees"]) => void;
+  error?: string;
+}) {
+  const zones = useAdminQuery<AdminDeliveryZone[]>("/delivery-areas");
+
+  if (zones.error) return <ErrorBlock message={zones.error} onRetry={zones.reload} />;
+  if (!zones.data) return <LoadingBlock rows={3} />;
+  if (zones.data.length === 0) {
+    return <p className="text-sm text-muted">There are no delivery areas yet. Add them on the Delivery areas page first.</p>;
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm text-muted">
+        Enter what the brand charges to deliver to each area. Leave an area empty if they don&apos;t deliver there: we&apos;ll deliver
+        their products to that area at our usual price.
+      </p>
+      {error && (
+        <p role="alert" className="text-sm text-danger">
+          {error}
+        </p>
+      )}
+      <ul className="divide-y divide-line border border-line bg-paper">
+        {zones.data.map((z) => (
+          <li key={z.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
+            <div className="min-w-0 flex-1">
+              <p className="font-medium">{z.name}</p>
+              <p className="text-sm text-muted tabular-nums">Our price: {formatUSD(z.feeCents)}</p>
+            </div>
+            {!z.isActive && <Badge>Hidden</Badge>}
+            <div className="w-36">
+              <MoneyInput
+                aria-label={`Brand's delivery price for ${z.name}`}
+                placeholder="We deliver"
+                value={fees[z.id] ?? null}
+                onChange={(cents) => onChange({ ...fees, [z.id]: cents })}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export function BrandForm({ brand }: { brand: AdminBrand | null }) {
@@ -192,6 +257,26 @@ export function BrandForm({ brand }: { brand: AdminBrand | null }) {
           <Field label="Notes" optional hint="Agreements, pickup address, anything to remember." error={errors.internalNotes}>
             <Textarea rows={4} value={draft.internalNotes} onChange={(e) => set("internalNotes", e.target.value)} />
           </Field>
+        </Section>
+
+        <Section title="Delivery" description="Who takes this brand's orders to customers.">
+          <Switch
+            label="Brand has its own delivery service"
+            description={
+              draft.ownDelivery
+                ? "They deliver their own products, at their prices below."
+                : "We deliver their products, at the prices on the Delivery areas page."
+            }
+            checked={draft.ownDelivery}
+            onChange={(on) => set("ownDelivery", on)}
+          />
+          {draft.ownDelivery && (
+            <BrandDeliveryPrices
+              fees={draft.deliveryFees}
+              onChange={(fees) => set("deliveryFees", fees)}
+              error={errors.deliveryFees ?? Object.entries(errors).find(([k]) => k.startsWith("deliveryFees."))?.[1]}
+            />
+          )}
         </Section>
 
         <Advanced>

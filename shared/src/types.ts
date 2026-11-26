@@ -144,7 +144,12 @@ export interface QuoteResult {
   lines: QuoteLine[];
   subtotalCents: number;
   discountCents: number;
+  /** Our fee and every brand's fee added together. */
   deliveryFeeCents: number;
+  /** Our part of the delivery fee. null when brands deliver everything in the bag themselves. */
+  shopDeliveryFeeCents: number | null;
+  /** Brands that deliver their own items, with their fee for the chosen area. */
+  brandDeliveries: { brandName: string; feeCents: number }[];
   totalCents: number;
   freeDeliveryThresholdCents: number | null;
   promo: { code: string; applied: boolean; message: string | null } | null;
@@ -191,6 +196,7 @@ export interface AdminBrandRow {
   logo: ImageSet | null;
   isActive: boolean;
   commissionPct: number;
+  ownDelivery: boolean;
   productCount: number;
 }
 
@@ -206,6 +212,10 @@ export interface AdminBrand {
   phone: string | null;
   email: string | null;
   commissionPct: number;
+  /** The brand delivers its own products, at the prices in deliveryFees. */
+  ownDelivery: boolean;
+  /** The brand's own price per delivery area. Areas left out are delivered by us. */
+  deliveryFees: { zoneId: number; feeCents: number }[];
   internalNotes: string | null;
   isActive: boolean;
 }
@@ -294,8 +304,12 @@ export interface AdminOrder extends AdminOrderRow {
     unitPriceCents: number;
     lineTotalCents: number;
     commissionPct: number;
+    /** True when the brand delivers this item itself. */
+    deliveredByBrand: boolean;
     image: ImageSet | null;
   }[];
+  /** Brands delivering their own items on this order. Our part is deliveryFeeCents minus these. */
+  brandDeliveries: { brandId: number; brandName: string; phone: string | null; feeCents: number }[];
   history: { status: OrderStatus; note: string | null; by: string | null; at: string }[];
   payments: { provider: PaymentMethod; amountCents: number; status: string; reference: string | null; at: string }[];
   nextStatuses: OrderStatus[];
@@ -321,6 +335,8 @@ export interface BrandBalance {
   brandName: string;
   totalSalesCents: number;
   commissionCents: number;
+  /** Delivery fees the brand charged when delivering its own items. Owed to the brand in full. */
+  deliveryFeesCents: number;
   owedToBrandCents: number;
   paidOutCents: number;
   balanceCents: number;

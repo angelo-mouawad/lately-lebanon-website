@@ -144,6 +144,12 @@ adminRouter.get("/brands", async (_req, res) => {
   res.json(await brands.listAdminBrands());
 });
 
+// Read-only list of our delivery areas, for the brand form's own delivery prices.
+// Editing areas stays owner-only below.
+adminRouter.get("/delivery-areas", async (_req, res) => {
+  res.json(await zones.listZones());
+});
+
 adminRouter.get("/brands/:id", async (req, res) => {
   res.json(await brands.getAdminBrand(parseId(req.params.id)));
 });

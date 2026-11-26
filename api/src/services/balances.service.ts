@@ -11,11 +11,15 @@ import { computeBrandBalances } from "./balance-calc";
 export const COUNTED_ORDER_STATUS = "DELIVERED" as const;
 
 export async function getBrandBalances(): Promise<BrandBalance[]> {
-  const [brands, sales, payouts] = await Promise.all([
+  const [brands, sales, deliveries, payouts] = await Promise.all([
     prisma.brand.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
     prisma.orderItem.findMany({
       where: { order: { status: COUNTED_ORDER_STATUS } },
       select: { brandId: true, lineTotalCents: true, commissionPct: true },
+    }),
+    prisma.orderBrandDelivery.findMany({
+      where: { order: { status: COUNTED_ORDER_STATUS } },
+      select: { brandId: true, feeCents: true },
     }),
     prisma.brandPayout.findMany({ select: { brandId: true, amountCents: true } }),
   ]);
@@ -23,6 +27,7 @@ export async function getBrandBalances(): Promise<BrandBalance[]> {
     brands,
     sales.map((s) => ({ ...s, commissionPct: Number(s.commissionPct) })),
     payouts,
+    deliveries,
   );
 }
 
@@ -79,11 +84,12 @@ const dollars = (cents: number) => (cents / 100).toFixed(2);
 
 export async function balancesCsv(): Promise<string> {
   const balances = await getBrandBalances();
-  const header = ["Brand", "Total sales (USD)", "Our commission (USD)", "Owed to brand (USD)", "Paid out (USD)", "Balance (USD)"];
+  const header = ["Brand", "Total sales (USD)", "Our commission (USD)", "Their delivery fees (USD)", "Owed to brand (USD)", "Paid out (USD)", "Balance (USD)"];
   const rows = balances.map((b) => [
     b.brandName,
     dollars(b.totalSalesCents),
     dollars(b.commissionCents),
+    dollars(b.deliveryFeesCents),
     dollars(b.owedToBrandCents),
     dollars(b.paidOutCents),
     dollars(b.balanceCents),
