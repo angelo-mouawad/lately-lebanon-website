@@ -155,7 +155,7 @@ export const pagesEn = {
       },
       {
         heading: "Contact",
-        paragraphs: ["Questions about these terms? Write to hello@latelylebanon.com."],
+        paragraphs: ["Questions about these terms? Write to info@latelylebanon.com."],
       },
     ],
   },
@@ -190,7 +190,7 @@ export const pagesEn = {
       {
         heading: "Your choices",
         paragraphs: [
-          "You can ask us what we hold about you, or ask us to correct or delete it, by writing to hello@latelylebanon.com. You can clear your bag and saved items at any time by clearing your browser data.",
+          "You can ask us what we hold about you, or ask us to correct or delete it, by writing to info@latelylebanon.com. You can clear your bag and saved items at any time by clearing your browser data.",
         ],
       },
     ],

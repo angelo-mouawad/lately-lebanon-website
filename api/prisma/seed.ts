@@ -366,7 +366,7 @@ async function seedCatalog() {
       update: {},
       create: {
         whatsappNumber: "+96170000000",
-        contactEmail: "hello@latelylebanon.com",
+        contactEmail: "info@latelylebanon.com",
         heroHeading: "Made in Lebanon, by people you can name.",
         heroText: "",
         featuredBrandIds: [],
@@ -470,7 +470,7 @@ async function seedCatalog() {
     create: {
       storeName: "Lately Lebanon",
       whatsappNumber: "+96170000000",
-      contactEmail: "hello@latelylebanon.com",
+      contactEmail: "info@latelylebanon.com",
       instagramUrl: "https://instagram.com/",
       freeDeliveryThresholdCents: 7500,
       announcementText: "Free delivery anywhere in Lebanon on orders over $75",

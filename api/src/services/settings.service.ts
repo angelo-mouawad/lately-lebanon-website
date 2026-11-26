@@ -10,7 +10,7 @@ const DEFAULTS = {
   id: 1,
   storeName: "Lately Lebanon",
   whatsappNumber: "+96170000000",
-  contactEmail: "hello@latelylebanon.com",
+  contactEmail: "info@latelylebanon.com",
   heroHeading: "Made in Lebanon, lately.",
   heroText: "",
   featuredBrandIds: [],
