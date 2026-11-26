@@ -38,7 +38,15 @@ export function Footer({ settings, categories }: { settings: StoreSettings; cate
     <footer className="mt-24 border-t border-ink bg-sand">
       <div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:px-10">
         <div className="flex max-w-sm flex-col gap-5">
-          <p className="font-serif text-3xl leading-none">{settings.storeName}</p>
+          {/* eslint-disable-next-line @next/next/no-img-element -- small static logo, no resizing needed */}
+          <img
+            src="/brand/lately-lebanon-logo.png"
+            alt={`${settings.storeName}, a curated marketplace`}
+            width={1616}
+            height={348}
+            loading="lazy"
+            className="h-auto w-64 max-w-full"
+          />
           <p className="text-[15px] leading-relaxed text-ink-soft">{t.footer.about}</p>
           <div className="flex flex-col gap-1 text-sm">
             <a href={whatsappLink(settings.whatsappNumber, t.whatsapp.greeting)} className="link-underline self-start">

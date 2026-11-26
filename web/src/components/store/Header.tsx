@@ -56,8 +56,15 @@ export function Header({ categories, storeName }: { categories: PublicCategory[]
           </nav>
         </div>
 
-        <Link href="/" className="font-serif text-2xl leading-none tracking-tight lg:text-[28px]" aria-label={`${storeName}, home`}>
-          {storeName}
+        <Link href="/" className="block shrink-0" aria-label={`${storeName}, home`}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- small static logo, no resizing needed */}
+          <img
+            src="/brand/lately-lebanon-wordmark.png"
+            alt={storeName}
+            width={969}
+            height={160}
+            className="h-6 w-auto sm:h-7 lg:h-8"
+          />
         </Link>
 
         <div className="flex items-center justify-end gap-0.5 sm:gap-2">

@@ -2,6 +2,7 @@ import {
   formatLebanesePhone,
   formatUSD,
   PAYMENT_METHOD_LABELS,
+  whatsappDigits,
   type PaymentMethod,
 } from "@latelylebanon/shared";
 
@@ -36,6 +37,30 @@ const ink = "#1B1815";
 const sand = "#F4EFE6";
 const line = "#D8CFC0";
 const accent = "#A8492A";
+/** Background of the logo image, so the footer and logo blend into one band. */
+const logoBeige = "#F2E6D8";
+
+const siteLabel = (ctx: EmailContext) => ctx.webOrigin.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+/** Footer shared by every email: logo, website and WhatsApp. */
+function footer(ctx: EmailContext): string {
+  const phone = escape(formatLebanesePhone(ctx.whatsappNumber));
+  const wa = `https://wa.me/${whatsappDigits(ctx.whatsappNumber)}`;
+  return `<tr><td align="center" style="padding:28px 28px 24px;background:${logoBeige};border-top:1px solid ${line};font-size:13px;line-height:1.7;color:${ink};">
+<a href="${ctx.webOrigin}" style="text-decoration:none;"><img src="${ctx.webOrigin}/brand/lately-lebanon-logo-email.png" width="280" alt="${escape(ctx.storeName)}, a curated marketplace" style="display:block;width:280px;max-width:100%;height:auto;margin:0 auto 14px;border:0;"></a>
+<a href="${ctx.webOrigin}" style="color:${ink};text-decoration:underline;">${escape(siteLabel(ctx))}</a><br>
+WhatsApp: <a href="${wa}" style="color:${ink};text-decoration:underline;">${phone}</a>
+</td></tr>`;
+}
+
+/** Plain-text version of the footer. */
+function textFooter(ctx: EmailContext): string {
+  return `--
+${ctx.storeName}, a curated marketplace
+${siteLabel(ctx)}
+WhatsApp: ${formatLebanesePhone(ctx.whatsappNumber)}
+`;
+}
 
 function layout(ctx: EmailContext, body: string): string {
   return `<!doctype html><html><body style="margin:0;padding:0;background:${sand};">
@@ -44,7 +69,7 @@ function layout(ctx: EmailContext, body: string): string {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid ${line};font-family:Helvetica,Arial,sans-serif;color:${ink};">
 <tr><td style="padding:24px 28px;border-bottom:1px solid ${line};font-family:Georgia,'Times New Roman',serif;font-size:22px;letter-spacing:0.5px;">${escape(ctx.storeName)}</td></tr>
 <tr><td style="padding:28px;font-size:15px;line-height:1.6;">${body}</td></tr>
-<tr><td style="padding:20px 28px;border-top:1px solid ${line};font-size:12px;color:#6B635A;">Made in Lebanon. Sold by ${escape(ctx.storeName)}.<br><a href="${ctx.webOrigin}" style="color:${ink};">${ctx.webOrigin.replace(/^https?:\/\//, "")}</a></td></tr>
+${footer(ctx)}
 </table></td></tr></table></body></html>`;
 }
 
@@ -118,7 +143,10 @@ ${order.address}
 ${order.city}, ${order.region}
 
 Track your order: ${trackUrl}
-`;
+
+Questions? Reply to this email or message us on WhatsApp.
+
+${textFooter(ctx)}`;
   return { subject: `Your ${ctx.storeName} order ${order.number}`, html, text };
 }
 
@@ -141,6 +169,7 @@ ${order.notes ? `Note: ${order.notes}\n` : ""}
 ${itemsText(order)}
 
 ${adminUrl}
-`;
+
+${textFooter(ctx)}`;
   return { subject: `New order ${order.number}: ${formatUSD(order.totalCents)}`, html, text };
 }

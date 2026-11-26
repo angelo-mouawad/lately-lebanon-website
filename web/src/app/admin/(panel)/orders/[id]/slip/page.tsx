@@ -31,8 +31,9 @@ export default function PackingSlipPage({ params }: { params: Promise<{ id: stri
       <article className="border border-ink bg-white p-8 print:border-0 print:p-0">
         <header className="flex items-start justify-between border-b border-ink pb-5">
           <div>
-            <p className="font-serif text-2xl">Lately Lebanon</p>
-            <p className="text-sm">latelylebanon.com</p>
+            {/* eslint-disable-next-line @next/next/no-img-element -- printed logo */}
+            <img src="/brand/lately-lebanon-logo.png" alt="Lately Lebanon, a curated marketplace" width={1616} height={348} className="h-auto w-56" />
+            <p className="mt-2 text-sm">latelylebanon.com</p>
           </div>
           <div className="text-right">
             <p className="font-serif text-2xl tabular-nums">{order.number}</p>

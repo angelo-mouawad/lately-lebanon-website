@@ -106,9 +106,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh lg:grid lg:grid-cols-[240px_1fr]">
       <aside className="no-print hidden border-r border-line bg-sand lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-between lg:p-5">
         <div className="flex flex-col gap-8">
-          <Link href="/admin" className="px-3 font-serif text-xl">
-            Lately Lebanon
-            <span className="label mt-1 block text-muted">Admin</span>
+          <Link href="/admin" className="px-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- small static logo */}
+            <img src="/brand/lately-lebanon-wordmark.png" alt="Lately Lebanon" width={969} height={160} className="h-6 w-auto" />
+            <span className="label mt-2 block text-muted">Admin</span>
           </Link>
           <NavLinks />
         </div>
@@ -116,8 +117,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
       </aside>
 
       <header className="no-print sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-sand px-4 lg:hidden">
-        <Link href="/admin" className="font-serif text-lg">
-          Lately Lebanon <span className="label text-muted">Admin</span>
+        <Link href="/admin" className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element -- small static logo */}
+          <img src="/brand/lately-lebanon-wordmark.png" alt="Lately Lebanon" width={969} height={160} className="h-5 w-auto" />
+          <span className="label text-muted">Admin</span>
         </Link>
         <button type="button" onClick={() => setMenuOpen(true)} className="-mr-2 flex items-center gap-2 p-2 text-sm" aria-label="Open menu">
           <MenuIcon className="size-6" />

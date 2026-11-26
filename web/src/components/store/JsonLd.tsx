@@ -12,7 +12,7 @@ export function organizationLd(settings: StoreSettings) {
     "@type": "OnlineStore",
     name: settings.storeName,
     url: SITE_URL,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: `${SITE_URL}/brand/lately-lebanon-logo-square.png`,
     email: settings.contactEmail,
     areaServed: { "@type": "Country", name: "Lebanon" },
     sameAs: settings.instagramUrl ? [settings.instagramUrl] : [],
