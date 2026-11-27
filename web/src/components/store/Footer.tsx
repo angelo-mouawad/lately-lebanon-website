@@ -49,17 +49,19 @@ export function Footer({ settings, categories }: { settings: StoreSettings; cate
           />
           <p className="text-[15px] leading-relaxed text-ink-soft">{t.footer.about}</p>
           <div className="flex flex-col gap-1 text-sm">
-            <p>
-              {t.footer.whatsapp}:{" "}
-              {whatsappNumbers(settings).map((n, i) => (
-                <span key={n}>
-                  {i > 0 && " · "}
-                  <a href={whatsappLink(n, t.whatsapp.greeting)} className="link-underline tabular-nums">
-                    {formatLebanesePhone(n)}
-                  </a>
-                </span>
-              ))}
-            </p>
+            {whatsappNumbers(settings).length > 0 && (
+              <p>
+                {t.footer.whatsapp}:{" "}
+                {whatsappNumbers(settings).map((n, i) => (
+                  <span key={n}>
+                    {i > 0 && " · "}
+                    <a href={whatsappLink(n, t.whatsapp.greeting)} className="link-underline tabular-nums">
+                      {formatLebanesePhone(n)}
+                    </a>
+                  </span>
+                ))}
+              </p>
+            )}
             <a href={`mailto:${settings.contactEmail}`} className="link-underline self-start">
               {settings.contactEmail}
             </a>

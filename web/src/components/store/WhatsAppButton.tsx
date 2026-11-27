@@ -15,7 +15,10 @@ const buttonClass =
 export function WhatsAppButton({ numbers }: { numbers: string[] }) {
   const position = "no-print fixed right-4 bottom-4 z-30 sm:right-6 sm:bottom-6 rtl:right-auto rtl:left-4";
 
-  if (numbers.length < 2) {
+  // No number set in the admin: WhatsApp is switched off.
+  if (numbers.length === 0) return null;
+
+  if (numbers.length === 1) {
     return (
       <a
         href={whatsappLink(numbers[0] ?? "", t.whatsapp.greeting)}

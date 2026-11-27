@@ -150,7 +150,7 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
     e.preventDefault();
     const body = {
       storeName: s.storeName,
-      whatsappNumber: s.whatsappNumber,
+      whatsappNumber: s.whatsappNumber ?? "",
       whatsappNumber2: s.whatsappNumber2 ?? "",
       contactEmail: s.contactEmail,
       instagramUrl: s.instagramUrl ?? "",
@@ -242,8 +242,8 @@ function SettingsForm({ initial }: { initial: AdminSettings }) {
           <Input value={s.storeName} onChange={(e) => set("storeName", e.target.value)} />
         </Field>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="WhatsApp number" hint="Used for the WhatsApp buttons on the website." error={errors.whatsappNumber}>
-            <Input type="tel" value={s.whatsappNumber} onChange={(e) => set("whatsappNumber", e.target.value)} />
+          <Field label="WhatsApp number" optional hint="Shows WhatsApp buttons on the website and in order emails. Leave both numbers empty to hide WhatsApp everywhere." error={errors.whatsappNumber}>
+            <Input type="tel" value={s.whatsappNumber ?? ""} onChange={(e) => set("whatsappNumber", e.target.value)} />
           </Field>
           <Field label="Second WhatsApp number" optional hint="Shown next to the first one everywhere. Leave empty to use one number." error={errors.whatsappNumber2}>
             <Input type="tel" value={s.whatsappNumber2 ?? ""} onChange={(e) => set("whatsappNumber2", e.target.value)} />

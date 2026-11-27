@@ -87,7 +87,7 @@ publicRouter.post(
   rateLimit("checkout", {
     windowMs: 10 * 60_000,
     max: 10,
-    message: "Too many orders from this connection. Please wait a few minutes or message us on WhatsApp.",
+    message: "Too many orders from this connection. Please wait a few minutes or email us.",
   }),
   async (req, res) => {
     res.status(201).json(await placeOrder(parse(checkoutSchema, req.body)));

@@ -251,6 +251,9 @@ export const en = {
     greeting: "Hi Lately Lebanon, I have a question.",
     orderGreeting: "Hi Lately Lebanon, about my order {number}:",
   },
+  contact: {
+    emailButton: "Email us",
+  },
   errors: {
     generic: "Something went wrong. Please try again.",
     network: "We couldn't reach the shop. Check your connection and try again.",

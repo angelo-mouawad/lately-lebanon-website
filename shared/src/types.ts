@@ -91,7 +91,8 @@ export interface PublicProduct extends Omit<PublicProductCard, "image" | "hoverI
 
 export interface StoreSettings {
   storeName: string;
-  whatsappNumber: string;
+  /** Optional. When no WhatsApp number is set, WhatsApp is hidden everywhere. */
+  whatsappNumber: string | null;
   /** Optional second WhatsApp number, shown next to the first. */
   whatsappNumber2: string | null;
   contactEmail: string;
@@ -377,7 +378,8 @@ export interface AdminDeliveryZone {
 
 export interface AdminSettings {
   storeName: string;
-  whatsappNumber: string;
+  /** Optional. When no WhatsApp number is set, WhatsApp is hidden everywhere. */
+  whatsappNumber: string | null;
   /** Optional second WhatsApp number, shown next to the first. */
   whatsappNumber2: string | null;
   contactEmail: string;

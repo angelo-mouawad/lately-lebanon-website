@@ -90,7 +90,7 @@ export function Confirmation() {
           </ButtonLink>
           <ButtonLink href="/shop">{t.confirmation.keepShopping}</ButtonLink>
         </div>
-        {settings && number && (
+        {settings && number && whatsappNumbers(settings).length > 0 && (
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             {whatsappNumbers(settings).map((n, _i, all) => (
               <a

@@ -37,15 +37,25 @@ export default async function ContactPage() {
               {numbers.length > 1 ? `${t.whatsapp.button}: ${formatLebanesePhone(n)}` : t.whatsapp.button}
             </a>
           ))}
+          {numbers.length === 0 && (
+            <a
+              href={`mailto:${settings.contactEmail}`}
+              className="inline-flex h-14 items-center justify-center gap-3 border border-olive bg-olive px-6 text-sm tracking-wide text-paper hover:bg-ink hover:border-ink"
+            >
+              {t.contact.emailButton}
+            </a>
+          )}
           <dl className="mt-4 flex flex-col gap-4 text-[15px]">
-            <div>
-              <dt className="label text-muted">WhatsApp</dt>
-              {numbers.map((n) => (
-                <dd key={n} className="tabular-nums">
-                  {formatLebanesePhone(n)}
-                </dd>
-              ))}
-            </div>
+            {numbers.length > 0 && (
+              <div>
+                <dt className="label text-muted">WhatsApp</dt>
+                {numbers.map((n) => (
+                  <dd key={n} className="tabular-nums">
+                    {formatLebanesePhone(n)}
+                  </dd>
+                ))}
+              </div>
+            )}
             <div>
               <dt className="label text-muted">Email</dt>
               <dd>

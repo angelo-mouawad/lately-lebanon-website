@@ -376,7 +376,7 @@ model AdminSession {
 model Settings {
   id                         Int      @id @default(1)
   storeName                  String   @default("Lately Lebanon") @db.VarChar(80)
-  whatsappNumber             String   @db.VarChar(20)
+  whatsappNumber             String?  @db.VarChar(20)
   whatsappNumber2            String?  @db.VarChar(20)
   contactEmail               String   @db.VarChar(190)
   instagramUrl               String?  @db.VarChar(255)

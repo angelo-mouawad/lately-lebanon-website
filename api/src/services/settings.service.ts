@@ -9,7 +9,7 @@ import { asNumberArray } from "./serializers";
 const DEFAULTS = {
   id: 1,
   storeName: "Lately Lebanon",
-  whatsappNumber: "+96170000000",
+  whatsappNumber: null,
   contactEmail: "info@latelylebanon.com",
   heroHeading: "Lebanese brands, all in one place.",
   heroText: "",

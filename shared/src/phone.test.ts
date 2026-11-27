@@ -71,4 +71,13 @@ describe("second WhatsApp number", () => {
     expect(whatsappNumbers({ whatsappNumber: "+9613550789", whatsappNumber2: null })).toEqual(["+9613550789"]);
     expect(whatsappNumbers({ whatsappNumber: "+9613550789", whatsappNumber2: "+9613550789" })).toEqual(["+9613550789"]);
   });
+
+  it("returns no numbers when WhatsApp is switched off", () => {
+    expect(whatsappNumbers({ whatsappNumber: null, whatsappNumber2: null })).toEqual([]);
+    expect(whatsappNumbers({ whatsappNumber: null, whatsappNumber2: "+9613168527" })).toEqual(["+9613168527"]);
+  });
+
+  it("lets the main number be left empty", () => {
+    expect(settingsSchema.parse({ ...base, whatsappNumber: "" }).whatsappNumber).toBeNull();
+  });
 });

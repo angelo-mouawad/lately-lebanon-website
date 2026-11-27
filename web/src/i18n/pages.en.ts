@@ -75,12 +75,12 @@ export const pagesEn = {
       },
       {
         heading: "Can I order something custom or in a larger quantity?",
-        paragraphs: ["Often, yes. Message us on WhatsApp with what you have in mind and we'll ask the brand."],
+        paragraphs: ["Often, yes. Email us with what you have in mind and we'll ask the brand."],
       },
       {
         heading: "I run a Lebanese brand. Can I sell on Lately Lebanon?",
         paragraphs: [
-          "We'd love to hear from you. Partner brands get another place to showcase their products, reach new customers and sell alongside other Lebanese brands. Send us a few words about your brand and a link to your page on WhatsApp or by email.",
+          "We'd love to hear from you. Partner brands get another place to showcase their products, reach new customers and sell alongside other Lebanese brands. Send us a few words about your brand and a link to your page by email.",
         ],
       },
     ],
@@ -198,8 +198,8 @@ export const pagesEn = {
   },
   contact: {
     title: "Contact",
-    description: "Message us on WhatsApp or email us. We usually reply the same day.",
-    intro: "The quickest way to reach us is WhatsApp. We usually reply the same day, Monday to Saturday.",
+    description: "Get in touch with Lately Lebanon by email. We usually reply the same day.",
+    intro: "Email us any time. We usually reply the same day, Monday to Saturday.",
     sections: [
       {
         heading: "About an order",

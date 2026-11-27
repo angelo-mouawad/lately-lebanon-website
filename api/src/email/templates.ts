@@ -45,29 +45,37 @@ const logoBeige = "#F2E6D8";
 
 const siteLabel = (ctx: EmailContext) => ctx.webOrigin.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-/** Footer shared by every email: logo, website and WhatsApp. */
 /** "03 550 789 or 03 168 527", each number kept on one line. */
 const phoneListHtml = (ctx: EmailContext) =>
   ctx.whatsappNumbers.map((n) => `<span style="white-space:nowrap;">${escape(formatLebanesePhone(n))}</span>`).join(" or ");
 
+/** "Questions?" line. Mentions WhatsApp only when the shop has a number set. */
+const questionsHtml = (ctx: EmailContext) =>
+  ctx.whatsappNumbers.length
+    ? `Questions? Reply to this email or message us on WhatsApp at ${phoneListHtml(ctx)}.`
+    : "Questions? Just reply to this email.";
+const questionsText = (ctx: EmailContext) =>
+  ctx.whatsappNumbers.length ? "Questions? Reply to this email or message us on WhatsApp." : "Questions? Just reply to this email.";
+
+/** Footer shared by every email: logo, website and, when set, WhatsApp. */
 function footer(ctx: EmailContext): string {
   const links = ctx.whatsappNumbers
     .map((n) => `<a href="https://wa.me/${whatsappDigits(n)}" style="color:${ink};text-decoration:underline;white-space:nowrap;">${escape(formatLebanesePhone(n))}</a>`)
     .join(" · ");
   return `<tr><td align="center" style="padding:28px 28px 24px;background:${logoBeige};border-top:1px solid ${line};font-size:13px;line-height:1.7;color:${ink};">
 <a href="${ctx.webOrigin}" style="text-decoration:none;"><img src="${ctx.webOrigin}/brand/lately-lebanon-logo-email.png" width="280" alt="${escape(ctx.storeName)}, a curated marketplace" style="display:block;width:280px;max-width:100%;height:auto;margin:0 auto 14px;border:0;"></a>
-<a href="${ctx.webOrigin}" style="color:${ink};text-decoration:underline;">${escape(siteLabel(ctx))}</a><br>
-WhatsApp: ${links}
+<a href="${ctx.webOrigin}" style="color:${ink};text-decoration:underline;">${escape(siteLabel(ctx))}</a>${links ? `<br>
+WhatsApp: ${links}` : ""}
 </td></tr>`;
 }
 
 /** Plain-text version of the footer. */
 function textFooter(ctx: EmailContext): string {
+  const wa = ctx.whatsappNumbers.length ? `WhatsApp: ${ctx.whatsappNumbers.map(formatLebanesePhone).join(" / ")}\n` : "";
   return `--
 ${ctx.storeName}, a curated marketplace
 ${siteLabel(ctx)}
-WhatsApp: ${ctx.whatsappNumbers.map(formatLebanesePhone).join(" / ")}
-`;
+${wa}`;
 }
 
 function layout(ctx: EmailContext, body: string): string {
@@ -136,7 +144,7 @@ ${itemsTable(order)}
 <p style="margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6B635A;">Delivering to</p>
 <p style="margin:0 0 20px;">${escape(order.address)}<br>${escape(order.city)}, ${escape(order.region)}</p>
 <p style="margin:0 0 20px;"><a href="${trackUrl}" style="display:inline-block;padding:12px 20px;background:${ink};color:#FFFFFF;text-decoration:none;font-size:14px;">Track your order</a></p>
-<p style="margin:0;font-size:13px;color:#6B635A;">Questions? Reply to this email or message us on WhatsApp at ${phoneListHtml(ctx)}.</p>`,
+<p style="margin:0;font-size:13px;color:#6B635A;">${questionsHtml(ctx)}</p>`,
   );
 
   const text = `Thank you, ${firstName}.
@@ -152,7 +160,7 @@ ${order.city}, ${order.region}
 
 Track your order: ${trackUrl}
 
-Questions? Reply to this email or message us on WhatsApp.
+${questionsText(ctx)}
 
 ${textFooter(ctx)}`;
   return { subject: `Your ${ctx.storeName} order ${order.number}`, html, text };

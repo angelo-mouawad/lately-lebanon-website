@@ -42,9 +42,14 @@ export function whatsappDigits(e164: string): string {
   return e164.replace(/\D/g, "");
 }
 
-/** The shop's WhatsApp numbers in display order: the main one, then the optional second one. */
-export function whatsappNumbers(settings: { whatsappNumber: string; whatsappNumber2?: string | null }): string[] {
-  return settings.whatsappNumber2 && settings.whatsappNumber2 !== settings.whatsappNumber
-    ? [settings.whatsappNumber, settings.whatsappNumber2]
-    : [settings.whatsappNumber];
+/**
+ * The shop's WhatsApp numbers in display order, skipping empty and repeated ones.
+ * An empty list means WhatsApp is switched off and every WhatsApp button and mention is hidden.
+ */
+export function whatsappNumbers(settings: { whatsappNumber?: string | null; whatsappNumber2?: string | null }): string[] {
+  const numbers: string[] = [];
+  for (const n of [settings.whatsappNumber, settings.whatsappNumber2]) {
+    if (n && !numbers.includes(n)) numbers.push(n);
+  }
+  return numbers;
 }

@@ -326,7 +326,7 @@ export const deliveryZoneSchema = z.object({
 
 export const settingsSchema = z.object({
   storeName: text(80),
-  whatsappNumber: lebanesePhone,
+  whatsappNumber: optionalLebanesePhone,
   whatsappNumber2: optionalLebanesePhone,
   contactEmail: z.email("Please enter a valid email address"),
   instagramUrl: optionalUrl,

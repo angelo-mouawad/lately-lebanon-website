@@ -16,12 +16,14 @@ export function organizationLd(settings: StoreSettings) {
     email: settings.contactEmail,
     areaServed: { "@type": "Country", name: "Lebanon" },
     sameAs: settings.instagramUrl ? [settings.instagramUrl] : [],
-    contactPoint: whatsappNumbers(settings).map((telephone) => ({
-      "@type": "ContactPoint",
-      telephone,
-      contactType: "customer service",
-      availableLanguage: ["English", "Arabic", "French"],
-    })),
+    contactPoint: whatsappNumbers(settings).length
+      ? whatsappNumbers(settings).map((telephone) => ({
+          "@type": "ContactPoint",
+          telephone,
+          contactType: "customer service",
+          availableLanguage: ["English", "Arabic", "French"],
+        }))
+      : [{ "@type": "ContactPoint", email: settings.contactEmail, contactType: "customer service", availableLanguage: ["English", "Arabic", "French"] }],
   };
 }
 
