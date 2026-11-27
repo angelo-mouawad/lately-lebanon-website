@@ -124,6 +124,7 @@ export async function getProduct(slug: string): Promise<PublicProduct> {
     compareAtCents: p.compareAtCents,
     inStock: p.variants.some((v) => v.stock > 0),
     description: p.description,
+    weightGrams: p.weightGrams,
     tags: asStringArray(p.tags),
     seoTitle: p.seoTitle,
     seoDescription: p.seoDescription,

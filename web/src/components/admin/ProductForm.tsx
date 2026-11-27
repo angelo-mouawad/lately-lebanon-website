@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import {
+  excerpt,
   productSchema,
   slugify,
   type AdminBrandRow,
@@ -176,6 +177,22 @@ export function ProductForm({ product }: { product: AdminProduct | null }) {
             >
               <MoneyInput value={draft.compareAtCents} onChange={(v) => set("compareAtCents", v)} />
             </Field>
+            <Field
+              label="Weight (grams)"
+              optional
+              hint="Shown on the product page, for example 250 for a 250 g jar. Leave empty if it comes in different sizes."
+              error={errors.weightGrams}
+            >
+              <Input
+                type="number"
+                inputMode="numeric"
+                min={1}
+                step={1}
+                value={draft.weightGrams}
+                onChange={(e) => set("weightGrams", e.target.value)}
+                placeholder="250"
+              />
+            </Field>
           </div>
         </Section>
 
@@ -222,7 +239,7 @@ export function ProductForm({ product }: { product: AdminProduct | null }) {
             <Textarea
               rows={3}
               value={draft.seoDescription}
-              placeholder={draft.description.slice(0, 160)}
+              placeholder={excerpt(draft.description)}
               onChange={(e) => set("seoDescription", e.target.value)}
             />
           </Field>

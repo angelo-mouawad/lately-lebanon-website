@@ -78,6 +78,8 @@ export interface PublicVariant {
 
 export interface PublicProduct extends Omit<PublicProductCard, "image" | "hoverImage"> {
   description: string;
+  /** Weight in grams, when the brand gave one. */
+  weightGrams: number | null;
   tags: string[];
   seoTitle: string | null;
   seoDescription: string | null;
@@ -256,6 +258,7 @@ export interface AdminProduct {
   description: string;
   priceCents: number;
   compareAtCents: number | null;
+  weightGrams: number | null;
   commissionPct: number | null;
   status: ProductStatus;
   featured: boolean;

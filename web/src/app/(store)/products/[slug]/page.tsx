@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import type { PublicProduct, PublicProductCard, StoreSettings } from "@latelylebanon/shared";
+import { excerpt, formatWeight, type PublicProduct, type PublicProductCard, type StoreSettings } from "@latelylebanon/shared";
 import { fmt, getMessages } from "@/i18n";
 import { apiGet } from "@/lib/api";
 import { JsonLd, productLd } from "@/components/store/JsonLd";
@@ -18,7 +18,7 @@ const getProduct = (slug: string) => apiGet<PublicProduct>(`/products/${encodeUR
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const p = await getProduct((await params).slug);
-  const description = p.seoDescription ?? p.description.slice(0, 160);
+  const description = p.seoDescription ?? excerpt(p.description);
   return {
     title: p.seoTitle ?? `${p.name} by ${p.brand.name}`,
     description,
@@ -86,14 +86,22 @@ export default async function ProductPage({ params }: { params: Params }) {
 
           <ProductPurchase product={product} card={card} freeDeliveryThresholdCents={settings.freeDeliveryThresholdCents} />
 
-          {product.description && (
+          {(product.description || product.weightGrams != null) && (
             <section className="border-t border-ink pt-5">
               <h2 className="label mb-3">{t.product.description}</h2>
-              <div className="prose-ll text-[15px] leading-relaxed text-ink-soft">
-                {product.description.split(/\n{2,}/).map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
-              </div>
+              {product.description && (
+                <div className="prose-ll text-[15px] leading-relaxed text-ink-soft">
+                  {product.description.split(/\n{2,}/).map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </div>
+              )}
+              {product.weightGrams != null && (
+                <dl className="mt-4 flex gap-2 text-[15px]">
+                  <dt className="text-muted">{t.product.weight}:</dt>
+                  <dd className="tabular-nums">{formatWeight(product.weightGrams)}</dd>
+                </dl>
+              )}
             </section>
           )}
 

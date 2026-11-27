@@ -21,6 +21,8 @@ export interface ProductDraft {
   description: string;
   priceCents: number | null;
   compareAtCents: number | null;
+  /** Typed as text so the field can be left empty. */
+  weightGrams: string;
   commissionPct: number | null;
   status: ProductStatus;
   featured: boolean;
@@ -40,6 +42,7 @@ export const emptyDraft: ProductDraft = {
   description: "",
   priceCents: null,
   compareAtCents: null,
+  weightGrams: "",
   commissionPct: null,
   status: "DRAFT",
   featured: false,
@@ -60,6 +63,7 @@ export function draftFromProduct(p: AdminProduct): ProductDraft {
     description: p.description,
     priceCents: p.priceCents,
     compareAtCents: p.compareAtCents,
+    weightGrams: p.weightGrams == null ? "" : String(p.weightGrams),
     commissionPct: p.commissionPct,
     status: p.status,
     featured: p.featured,
@@ -82,6 +86,7 @@ export function draftToInput(d: ProductDraft) {
     description: d.description,
     priceCents: d.priceCents,
     compareAtCents: d.compareAtCents,
+    weightGrams: d.weightGrams.trim() === "" ? null : Number(d.weightGrams),
     commissionPct: d.commissionPct,
     status: d.status,
     featured: d.featured,

@@ -47,6 +47,7 @@ export function productLd(p: PublicProduct) {
         url,
         category: p.category.name,
         brand: { "@type": "Brand", name: p.brand.name },
+        ...(p.weightGrams != null ? { weight: { "@type": "QuantitativeValue", value: p.weightGrams, unitCode: "GRM" } } : {}),
         offers:
           low === high
             ? { "@type": "Offer", url, priceCurrency: "USD", price: usd(low), availability, itemCondition: "https://schema.org/NewCondition" }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import type { PublicBrand, PublicProductCard } from "@latelylebanon/shared";
+import { excerpt, type PublicBrand, type PublicProductCard } from "@latelylebanon/shared";
 import { fmt, getMessages } from "@/i18n";
 import { apiGet } from "@/lib/api";
 import { InstagramIcon } from "@/components/ui/icons";
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const b = await getBrand((await params).slug);
   return {
     title: b.name,
-    description: b.story.slice(0, 160),
+    description: excerpt(b.story),
     alternates: { canonical: `/brands/${b.slug}` },
     openGraph: { title: b.name, images: b.cover ? [{ url: b.cover.lg, width: b.cover.width, height: b.cover.height }] : [] },
   };

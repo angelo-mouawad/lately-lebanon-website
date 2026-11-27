@@ -112,6 +112,8 @@ model Product {
   description    String        @db.Text
   priceCents     Int
   compareAtCents Int?
+  /// Optional weight in grams, shown on the product page and given to search engines.
+  weightGrams    Int?
   // Overrides the brand's default commission when set.
   commissionPct  Decimal?      @db.Decimal(5, 2)
   status         ProductStatus @default(DRAFT)

@@ -115,6 +115,7 @@ export const en = {
     deliveryLine: "Delivered across Lebanon in 2 to 4 working days. Cash on delivery available.",
     freeDeliveryLine: "Free delivery on orders over {amount}.",
     description: "About this product",
+    weight: "Weight",
     madeBy: "The brand",
     visitBrand: "More from {brand}",
     related: "You might also like",

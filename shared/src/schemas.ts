@@ -228,6 +228,7 @@ export const productSchema = z
     description: z.string().trim().max(10000).default(""),
     priceCents: cents(),
     compareAtCents: cents().nullish(),
+    weightGrams: z.number({ error: "Please enter the weight in grams" }).int("Use whole grams").min(1, "The weight should be at least 1 g").max(1_000_000, "That weight is too large").nullish(),
     commissionPct: percent.nullish(),
     status: z.enum(PRODUCT_STATUSES).default("DRAFT"),
     featured: z.boolean().default(false),
